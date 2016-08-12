@@ -1,0 +1,109 @@
+<template name="mainLayout">
+  <body>
+    <div class="container">
+      <header>
+        <h1>Hotspot venues {{incompleteCount}}</h1>
+   
+        {{> loginButtons}}
+   
+      </header>
+      <main>
+        {{#if currentUser}}
+          {{>Template.dynamic template=content}}
+        {{else}}
+          <p>Please sign in or create an account</p>
+        {{/if}}
+      </main>
+    </div>
+  </body>
+</template>
+
+<template name="VenueList">
+  <h2>Venue list ({{incompleteCount}})</h2>
+  <a href="addvenue" name="addVenueBtn" type="button">Add</a>
+  {{#each venues}}
+    {{> venuesummary}}
+  {{/each}}
+  <a href="venue">Select</a>
+</template>
+
+<template name="AddVenue">
+  <h2>Add venue</h2>
+  <form class="add-venue">
+    <label>Venue name</label> <br/>
+    <input type="text" name="venueName" placeholder="The name of your venue" /> <br/>
+    <label>Description</label> <br/>
+    <input type="text" name="venueDescription" placeholder="Brief description" /> <br/>
+    <label>Latitude and Longitude</label> <br/>
+    <input type="text" name="venueLatitude" placeholder="Get your latitude from Google maps" />
+    <input type="text" name="venueLongitude" placeholder="Get your longitude from Google maps" /> <br/>
+    <label>Opening hours</label> <br/>
+    <input type="text" name="venueOpeningHours" placeholder="e.g. Mon-Fri 12-10pm, Sat 10am-midnight, closed Sun" /> <br/>
+    <label>Link to your website</label> <br/>
+    <input type="text" name="venueWebsite" placeholder="Full URL (include http://)" /> <br/>
+    <label>Link to your booking/reservations</label> <br/>
+    <input type="text" name="venueBooking" placeholder="Full URL or leave blank" /> <br/>
+    <label>Link to your news/reviews</label> <br/>
+    <input type="text" name="venueNews" placeholder="Full URL or leave blank" /> <br/> <br/>
+    <input type="submit" value="Save">  <a href="/">Cancel</a>
+   </form>
+ </template>
+
+<template name="EditVenue">
+{{#with thisVenue}}
+  <h2>Edit venue</h2>
+  <form class="edit-venue">
+    <label>Venue name</label> <br/>
+    <input type="text" name="venueName" value={{name}} /> <br/>
+    <label>Description</label> <br/>
+    <input type="text" name="venueDescription" value={{description}} /> <br/>
+    <label>Latitude and Longitude</label> <br/>
+    <input type="text" name="venueLatitude" value={{latitude}} />
+    <input type="text" name="venueLongitude" value={{longitude}} /> <br/>
+    <label>Opening hours</label> <br/>
+    <input type="text" name="venueOpeningHours" value={{openingHours}} /> <br/>
+    <label>Link to your website</label> <br/>
+    <input type="text" name="venueWebsite" value={{websiteURL}} /> <br/>
+    <label>Link to your booking/reservations</label> <br/>
+    <input type="text" name="venueBooking" value={{bookingURL}} /> <br/>
+    <label>Link to your news/reviews</label> <br/>
+    <input type="text" name="venueNews" value={{newsURL}} /> <br/> <br/>
+    <input type="submit" value="Update">  <a href="/">Cancel</a>
+  </form>
+{{/with}}
+</template>
+
+<template name="Venue">
+  <h2>Venue </h2>
+  {{#with thisVenue}}
+    <a href="/editvenue/{{_id}}">Edit this venue</a><br/>
+    <a href="/venueevents/{{_id}}">Show events for this venue</a><br/>
+    <span class="text"><strong>{{name}}</strong> - {{description}} </span><br/><br/>
+
+  {{/with}}
+
+  <a href="/">Return to venue list</a>
+</template>
+
+<template name="VenueEvents">
+  <h2>Events</h2>
+  <a href="/addevent">Add an event</a><br/>
+  <p>This is where we'd list all the events for a venue</p>
+  <p>...if we knew what we were doing :-) </p>
+  <a href="/editevent">Edit an event</a><br/>
+  <a href="/venue">Return to venue stats</a>
+</template>
+ 
+<template name="AddEvent">
+  <h2>Add event</h2>
+  <p>This is where we'd add a new event for a venue</p>
+  <p>...if we knew what we were doing :-) </p>
+  <a href="/venueevents">Save</a>
+</template>
+
+<template name="EditEvent">
+  <h2>Edit event</h2>
+  <p>This is where we'd edit an existing event for a venue</p>
+  <p>...if we knew what we were doing :-) </p>
+  <a href="/venueevents">Save</a>
+</template>
