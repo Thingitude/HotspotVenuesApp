@@ -9,6 +9,7 @@ import './barchart.js';
 import './event.js';
 import './body.html';
  
+
 Template.body.onCreated(function bodyOnCreated() {
   this.state = new ReactiveDict();
   Meteor.subscribe('venues');
@@ -47,7 +48,23 @@ Template.Event.helpers({
   }
 });
 
-Template.Venue.helpers({
+Template.VenueD.helpers({
+  thisVenue() {
+    const venueId=FlowRouter.getParam("venueId");
+    // console.log(venueId);
+    return Venues.findOne({"_id": venueId});
+  }
+});
+
+Template.VenueW.helpers({
+  thisVenue() {
+    const venueId=FlowRouter.getParam("venueId");
+    // console.log(venueId);
+    return Venues.findOne({"_id": venueId});
+  }
+});
+
+Template.VenueM.helpers({
   thisVenue() {
     const venueId=FlowRouter.getParam("venueId");
     // console.log(venueId);

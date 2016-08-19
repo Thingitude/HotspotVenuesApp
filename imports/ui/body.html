@@ -42,6 +42,8 @@
     <input type="text" name="venueName" placeholder="The name of your venue" /> <br/>
     <label>Description</label> <br/>
     <input type="text" name="venueDescription" placeholder="Brief description" /> <br/>
+    <label>Sensor ID</label> <br/>
+    <input type="text" name="venueSensorId" placeholder="Your device EUI" /> <br/>
     <label>Latitude and Longitude</label> <br/>
     <input type="text" name="venueLatitude" placeholder="Get your latitude from Google maps" />
     <input type="text" name="venueLongitude" placeholder="Get your longitude from Google maps" /> <br/>
@@ -67,6 +69,8 @@
     <input type="text" name="venueName" value={{name}} /> <br/>
     <label>Description</label> <br/>
     <input type="text" name="venueDescription" value={{description}} /> <br/>
+    <label>Sensor ID</label> <br/>
+    <input type="text" name="venueSensorId" value={{sensorId}} /> <br/>
     <label>Latitude and Longitude</label> <br/>
     <input type="text" name="venueLatitude" value={{latitude}} />
     <input type="text" name="venueLongitude" value={{longitude}} /> <br/>
@@ -120,23 +124,66 @@
 {{/with}}
 </template>
 
-<template name="Venue">
+<template name="VenueD">
   {{#with thisVenue}}
-  <h2>{{name}}</h2><hr/>
-    <a href="/">Back</a>
-    <a href="/editvenue/{{_id}}">Edit this venue</a><br/><br/>
-    <a href="/venueevents/{{_id}}">Show events for this venue</a><br/><br/>
-    <span class="text">{{description}} <br/>
-    {{openingHours}}<br/>
-    <a href="{{websiteURL}}">Website</a><br/>
-    <a href="{{bookingURL}}">Book now</a><br/>
-    <a href="{{newsURL}}">News</a><br/><hr/>
-    <h2 style="color:red">Analytics and reviews</h2>
-    </span>
-    
-
+    <h2>{{name}} </h2>
+    <h3>"{{description}}"</h3>
+    <a href="/editvenue/{{_id}}">Edit this venue</a><br/>
+    <a href="/venueevents/{{_id}}">Show events for this venue</a><br/>
+    <form class="venue-data">
+      <input type="radio" name="timeframe" value="today" checked> Today<br>
+      <input type="radio" name="timeframe" value="week"> Week<br>
+      <input type="radio" name="timeframe" value="month"> Month<br>
+      <input type="submit" value="Refresh">
+    </form>
+    <br/>
+    <div id="chart">
+      {{barChartDaily}}
+    </div>
   {{/with}}
+  <a href="/">Return to venue list</a>
 </template>
+
+<template name="VenueW">
+  {{#with thisVenue}}
+    <h2>{{name}} </h2>
+    <h3>"{{description}}"</h3>
+    <a href="/editvenue/{{_id}}">Edit this venue</a><br/>
+    <a href="/venueevents/{{_id}}">Show events for this venue</a><br/>
+    <form class="venue-data">
+      <input type="radio" name="timeframe" value="today"> Today<br>
+      <input type="radio" name="timeframe" value="week" checked> Week<br>
+      <input type="radio" name="timeframe" value="month"> Month<br>
+      <input type="submit" value="Refresh">
+    </form>
+    <br/>
+    <div id="chart">
+      {{barChartWeek}}
+    </div>
+  {{/with}}
+  <a href="/">Return to venue list</a>
+</template>
+
+<template name="VenueM">
+  {{#with thisVenue}}
+    <h2>{{name}} </h2>
+    <h3>"{{description}}"</h3>
+    <a href="/editvenue/{{_id}}">Edit this venue</a><br/>
+    <a href="/venueevents/{{_id}}">Show events for this venue</a><br/>
+    <form class="venue-data">
+      <input type="radio" name="timeframe" value="today"> Today<br>
+      <input type="radio" name="timeframe" value="week"> Week<br>
+      <input type="radio" name="timeframe" value="month" checked> Month<br>
+      <input type="submit" value="Refresh">
+    </form>
+    <br/>
+    <div id="chart">
+      {{barChartMonth}}
+    </div>
+  {{/with}}
+  <a href="/">Return to venue list</a>
+</template>
+
 
 <template name="VenueEvents">
   <h2>Events list</h2>
