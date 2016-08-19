@@ -8,13 +8,13 @@ if (Meteor.isServer) {
   // This code only runs on the server
   // Only publish venues that belong to the current user
   Meteor.publish('venues', function venuesPublication() {
-    //return Venues.find({ owner: this.userId, });
-    return Venues.find();
+    return Venues.find({ owner: this.userId});
+    //return Venues.find();
   });
 }
  
 Meteor.methods({
-  'venues.insert'(name, description, sensorId,
+  'venues.insert'(name, description, 
       latitude, longitude, openingHours, 
       websiteURL, bookingURL,newsURL) {
     console.log("run venues.insert");
@@ -27,8 +27,7 @@ Meteor.methods({
  
     Venues.insert({
       name, 
-      description,
-      sensorId, 
+      description, 
       latitude, 
       longitude, 
       openingHours, 
@@ -39,7 +38,7 @@ Meteor.methods({
       username: Meteor.users.findOne(this.userId).username,
     });
   },
-  'venues.update'(venueId, name, description, sensorId,
+  'venues.update'(venueId, name, description, 
       latitude, longitude, openingHours, 
       websiteURL, bookingURL,newsURL) {
     console.log("run venues.insert");
@@ -55,7 +54,6 @@ Meteor.methods({
     Venues.update(venueId, {
       $set: {name, 
         description, 
-        sensorId,
         latitude, 
         longitude, 
         openingHours, 
@@ -72,7 +70,8 @@ Meteor.methods({
     if (venue.owner !== this.userId) {
       throw new Meteor.Error('not-authorized');
     }
- 
+   
     Venues.remove(venueId);
+    
   },
 });
