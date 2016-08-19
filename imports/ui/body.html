@@ -21,10 +21,18 @@
 <template name="VenueList">
   <h2>Venue list ({{incompleteCount}})</h2>
   <a href="addvenue" name="addVenueBtn" type="button">Add</a>
-  {{#each venues}}
-    {{> venuesummary}}
-  {{/each}}
-  <a href="venue">Select</a>
+  <div class="table-responsive">
+    <table class="table">
+      <thead>
+        <tr><th>Venue</th><th>Description</th><th>Select</th></tr>
+      </thead>
+      <tbody>
+        {{#each venues}}
+          <tr><td>{{name}}</td><td>{{description}}</td><td><a href="venue/{{this._id}}">Select</a></td></tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
 </template>
 
 <template name="AddVenue">
@@ -41,6 +49,8 @@
     <input type="text" name="venueLongitude" placeholder="Get your longitude from Google maps" /> <br/>
     <label>Opening hours</label> <br/>
     <input type="text" name="venueOpeningHours" placeholder="e.g. Mon-Fri 12-10pm, Sat 10am-midnight, closed Sun" /> <br/>
+    <label>Phone:</label> <br/>
+    <input type="text" name="venuePhone" placeholder="Venue phone number" /> <br/>
     <label>Link to your website</label> <br/>
     <input type="text" name="venueWebsite" placeholder="Full URL (include http://)" /> <br/>
     <label>Link to your booking/reservations</label> <br/>
@@ -66,6 +76,8 @@
     <input type="text" name="venueLongitude" value={{longitude}} /> <br/>
     <label>Opening hours</label> <br/>
     <input type="text" name="venueOpeningHours" value={{openingHours}} /> <br/>
+    <label>Phone:</label> <br/>
+    <input type="text" name="venuePhone" value={{phone}} /> <br/>
     <label>Link to your website</label> <br/>
     <input type="text" name="venueWebsite" value={{websiteURL}} /> <br/>
     <label>Link to your booking/reservations</label> <br/>

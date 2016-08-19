@@ -9,14 +9,14 @@ if (Meteor.isServer) {
   // Only publish venues that belong to the current user
   Meteor.publish('venues', function venuesPublication() {
     //return Venues.find({ owner: this.userId, });
-    return Venues.find();
+    return Venues.find({owner: this.userId});
   });
 }
  
 Meteor.methods({
   'venues.insert'(name, description, sensorId,
       latitude, longitude, openingHours, 
-      websiteURL, bookingURL,newsURL) {
+      phone, websiteURL, bookingURL,newsURL) {
     console.log("run venues.insert");
     check(name, String);
  
@@ -32,6 +32,7 @@ Meteor.methods({
       latitude, 
       longitude, 
       openingHours, 
+      phone,
       websiteURL, 
       bookingURL,
       newsURL,
@@ -41,7 +42,7 @@ Meteor.methods({
   },
   'venues.update'(venueId, name, description, sensorId,
       latitude, longitude, openingHours, 
-      websiteURL, bookingURL,newsURL) {
+      phone, websiteURL, bookingURL,newsURL) {
     console.log("run venues.insert");
     check(name, String);
  
@@ -59,6 +60,7 @@ Meteor.methods({
         latitude, 
         longitude, 
         openingHours, 
+        phone,
         websiteURL, 
         bookingURL,
         newsURL,

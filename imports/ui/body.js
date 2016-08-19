@@ -4,7 +4,7 @@ import { Template } from 'meteor/templating';
 import { Venues } from '../api/venues.js';
 import { ReactiveDict } from 'meteor/reactive-dict';
  
-import './venue.js';
+//import './venue.js';
 import './barchart.js';
 import './body.html';
 
@@ -47,6 +47,7 @@ Template.AddVenue.events({
     const venueLatitude = target.venueLatitude.value;
     const venueLongitude = target.venueLongitude.value;
     const venueOpeningHours = target.venueOpeningHours.value;
+    const venuePhone = target.venuePhone.value;
     const venueWebsite = target.venueWebsite.value;
     const venueBooking = target.venueBooking.value;
     const venueNews = target.venueNews.value;
@@ -54,7 +55,7 @@ Template.AddVenue.events({
     // Insert a venue into the collection
     Meteor.call('venues.insert', venueName, venueDescription, venueSensorId,
       venueLatitude, venueLongitude, venueOpeningHours, 
-      venueWebsite, venueBooking, venueNews);
+      venuePhone, venueWebsite, venueBooking, venueNews);
     // Clear form
     //target.text.value = '';
     window.location.assign("/");
@@ -76,6 +77,7 @@ Template.EditVenue.events({
     const venueLatitude = target.venueLatitude.value;
     const venueLongitude = target.venueLongitude.value;
     const venueOpeningHours = target.venueOpeningHours.value;
+    const venuePhone = target.venuePhone.value;
     const venueWebsite = target.venueWebsite.value;
     const venueBooking = target.venueBooking.value;
     const venueNews = target.venueNews.value;
@@ -83,7 +85,7 @@ Template.EditVenue.events({
     // Insert a venue into the collection
     Meteor.call('venues.update', venueId, venueName, venueDescription, venueSensorId,
       venueLatitude, venueLongitude, venueOpeningHours, 
-      venueWebsite, venueBooking, venueNews);
+      venuePhone, venueWebsite, venueBooking, venueNews);
     // Clear form
     //target.text.value = '';
     window.location.assign("/venue/" + this._id);
