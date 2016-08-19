@@ -25,19 +25,7 @@ FlowRouter.route('/venueevents/:venueId', {
 
 FlowRouter.route('/venue/:venueId', {
   action(params, queryParams) {
-    BlazeLayout.render("mainLayout", {content: "VenueD"});
-  }
-});
-
-FlowRouter.route('/venue/:venueId/w', {
-  action(params, queryParams) {
-    BlazeLayout.render("mainLayout", {content: "VenueW"});
-  }
-});
-
-FlowRouter.route('/venue/:venueId/m', {
-  action(params, queryParams) {
-    BlazeLayout.render("mainLayout", {content: "VenueM"});
+    BlazeLayout.render("mainLayout", {content: "Venue"});
   }
 });
 
@@ -48,6 +36,18 @@ FlowRouter.route('/addevent/:venueId', {
 });
 
 FlowRouter.route('/editevent/venueId', {
+  action(params, queryParams) {
+    BlazeLayout.render("mainLayout", {content: "EditEvent"});
+  }
+});
+
+FlowRouter.route('/event/:eventId', {
+  action(params, queryParams) {
+    BlazeLayout.render("mainLayout", {content: "Event"});
+  }
+});
+
+FlowRouter.route('/editevent/:eventId', {
   action(params, queryParams) {
     BlazeLayout.render("mainLayout", {content: "EditEvent"});
   }

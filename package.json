@@ -5,7 +5,6 @@
     "start": "meteor run"
   },
   "dependencies": {
-    "highcharts": "^4.2.6",
     "meteor-node-stubs": "~0.2.0"
   }
 }

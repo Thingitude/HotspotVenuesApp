@@ -42,8 +42,6 @@
     <input type="text" name="venueName" placeholder="The name of your venue" /> <br/>
     <label>Description</label> <br/>
     <input type="text" name="venueDescription" placeholder="Brief description" /> <br/>
-    <label>Sensor ID</label> <br/>
-    <input type="text" name="venueSensorId" placeholder="Your device EUI" /> <br/>
     <label>Latitude and Longitude</label> <br/>
     <input type="text" name="venueLatitude" placeholder="Get your latitude from Google maps" />
     <input type="text" name="venueLongitude" placeholder="Get your longitude from Google maps" /> <br/>
@@ -69,8 +67,6 @@
     <input type="text" name="venueName" value={{name}} /> <br/>
     <label>Description</label> <br/>
     <input type="text" name="venueDescription" value={{description}} /> <br/>
-    <label>Sensor ID</label> <br/>
-    <input type="text" name="venueSensorId" value={{sensorId}} /> <br/>
     <label>Latitude and Longitude</label> <br/>
     <input type="text" name="venueLatitude" value={{latitude}} />
     <input type="text" name="venueLongitude" value={{longitude}} /> <br/>
@@ -84,90 +80,96 @@
     <input type="text" name="venueBooking" value={{bookingURL}} /> <br/>
     <label>Link to your news/reviews</label> <br/>
     <input type="text" name="venueNews" value={{newsURL}} /> <br/> <br/>
-    <input type="submit" value="Update">  <a href="/">Cancel</a>
+    <input type="submit" value="Update">  <a href="/venue/{{_id}}">Cancel</a>
   </form>
 {{/with}}
 </template>
 
-<template name="VenueD">
-  {{#with thisVenue}}
-    <h2>{{name}} </h2>
-    <h3>"{{description}}"</h3>
-    <a href="/editvenue/{{_id}}">Edit this venue</a><br/>
-    <a href="/venueevents/{{_id}}">Show events for this venue</a><br/>
-    <form class="venue-data">
-      <input type="radio" name="timeframe" value="today" checked> Today<br>
-      <input type="radio" name="timeframe" value="week"> Week<br>
-      <input type="radio" name="timeframe" value="month"> Month<br>
-      <input type="submit" value="Refresh">
-    </form>
-    <br/>
-    <div id="chart">
-    {{barChartDaily}}
-    </div>
-  {{/with}}
-  <a href="/">Return to venue list</a>
+<template name="EditEvent">
+{{#with thisEvent}}
+  <h2>Edit Event</h2>
+  
+  <form class="edit-event">
+    <label>Event name</label> <br/>
+    <input type="text" name="eventName" value={{name}} /> <br/>
+    <label>Description</label> <br/>
+    <input type="text" name="eventDescription" value={{description}} /> <br/>
+    <label>Start date</label> <br/>
+    <input type="text" name="eventStartDate" value={{startDate}} /> <br/>
+    <label>End date</label> <br/>
+    <input type="text" name="eventEndDate" value={{endDate}} /> <br/>
+    <label>Start time</label> <br/>
+    <input type="text" name="eventStartTime" value={{startTime}} /> <br/>
+    <label>End time</label> <br/>
+    <input type="text" name="eventEndTime" value={{endTime}} /> <br/> <br/>
+    <input type="submit" value="Update"> <a href="/event/{{_id}}">Cancel</a>
+  </form>  
+{{/with}}
 </template>
 
-<template name="VenueW">
-  {{#with thisVenue}}
-    <h2>{{name}} </h2>
-    <h3>"{{description}}"</h3>
-    <a href="/editvenue/{{_id}}">Edit this venue</a><br/>
-    <a href="/venueevents/{{_id}}">Show events for this venue</a><br/>
-    <form class="venue-data">
-      <input type="radio" name="timeframe" value="today" > Today<br>
-      <input type="radio" name="timeframe" value="week" checked> Week<br>
-      <input type="radio" name="timeframe" value="month"> Month<br>
-      <input type="submit" value="Refresh">
-    </form>
-     <br/>
-    <div id="chart">
-    {{barChartWeek}}
-    </div>
-  {{/with}}
-  <a href="/">Return to venue list</a>
+<template name="Event">
+{{#with thisEvent}}
+  <a href="/venueevents/{{_id}}">Back</a>  
+  <a href="/editevent/{{_id}}">Edit</a>
+  <h2>{{this.name}}</h2>
+  <h4>{{this.description}}</h4> <br/>
+  <h3>Dates: </h3> <p>{{this.startDate}} to {{this.endDate}}</p> <br/>
+  <h3>Times: </h3> <p>{{this.startTime}} to {{this.endTime}}</p> <br/>
+  <h3 style="color:red">Ratings and analytics go here</h3>
+
+{{/with}}
 </template>
 
-<template name="VenueM">
+<template name="Venue">
   {{#with thisVenue}}
-    <h2>{{name}} </h2>
-    <h3>"{{description}}"</h3>
-    <a href="/editvenue/{{_id}}">Edit this venue</a><br/>
-    <a href="/venueevents/{{_id}}">Show events for this venue</a><br/>
-    <form class="venue-data">
-      <input type="radio" name="timeframe" value="today" > Today<br>
-      <input type="radio" name="timeframe" value="week"> Week<br>
-      <input type="radio" name="timeframe" value="month" checked> Month<br>
-      <input type="submit" value="Refresh">
-    </form>
-     <br/>
-    <div id="chart">
-    {{barChartMonth}}
-    </div>
+  <h2>{{name}}</h2><hr/>
+    <a href="/">Back</a>
+    <a href="/editvenue/{{_id}}">Edit this venue</a><br/><br/>
+    <a href="/venueevents/{{_id}}">Show events for this venue</a><br/><br/>
+    <span class="text">{{description}} <br/>
+    {{openingHours}}<br/>
+    <a href="{{websiteURL}}">Website</a><br/>
+    <a href="{{bookingURL}}">Book now</a><br/>
+    <a href="{{newsURL}}">News</a><br/><hr/>
+    <h2 style="color:red">Analytics and reviews</h2>
+    </span>
+    
+
   {{/with}}
-  <a href="/">Return to venue list</a>
 </template>
 
 <template name="VenueEvents">
-  <h2>Events</h2>
-  <a href="/addevent">Add an event</a><br/>
-  <p>This is where we'd list all the events for a venue</p>
-  <p>...if we knew what we were doing :-) </p>
-  <a href="/editevent">Edit an event</a><br/>
-  <a href="/venue">Return to venue stats</a>
+  <h2>Events list</h2>
+  {{#with thisVenue}}
+    <a href="/venue/{{_id}}">Back</a><br/><br/>
+    <a href="/addevent/{{_id}}" name="addEventBtn">Add</a><br/>
+  {{/with}}
+
+  {{#each events}}
+    {{> eventsummary}}
+  {{/each}}
+  
 </template>
  
 <template name="AddEvent">
-  <h2>Add event</h2>
-  <p>This is where we'd add a new event for a venue</p>
-  <p>...if we knew what we were doing :-) </p>
-  <a href="/venueevents">Save</a>
+  <h2>Add Event</h2>
+  {{#with thisVenue}}
+  <form class="add-event">
+    <label>Event name</label> <br/>
+    <input type="text" name="eventName" placeholder="The name of your event" /> <br/>
+    <label>Description</label> <br/>
+    <input type="text" name="eventDescription" placeholder="Brief description" /> <br/>
+    <label>Start Date</label> <br/>
+    <input type="date" name="eventStartDate" placeholder="" /> <br/>
+    <label>Start Time</label> <br/>
+    <input type="time" name="eventStartTime" /> <br/>
+    <label>End Date</label> <br/>
+    <input type="date" name="eventEndDate" placeholder="" /> <br/>
+    <label>End Time</label> <br/>
+    <input type="time" name="eventEndTime" /> <br/>
+    <input type="submit" value="Save">  <a href="/">Cancel</a>
+   </form>
+   {{/with}}
 </template>
 
-<template name="EditEvent">
-  <h2>Edit event</h2>
-  <p>This is where we'd edit an existing event for a venue</p>
-  <p>...if we knew what we were doing :-) </p>
-  <a href="/venueevents">Save</a>
-</template>
+
