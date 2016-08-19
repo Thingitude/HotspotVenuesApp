@@ -5,7 +5,9 @@ import { Venues } from '../api/venues.js';
 import { ReactiveDict } from 'meteor/reactive-dict';
  
 import './venue.js';
+import './barchart.js';
 import './body.html';
+
  
 Template.body.onCreated(function bodyOnCreated() {
   this.state = new ReactiveDict();
@@ -20,14 +22,6 @@ Template.VenueList.helpers({
   incompleteCount() {
     return Venues.find().count();
   },
-});
-
-Template.Venue.helpers({
-  thisVenue() {
-    const venueId=FlowRouter.getParam("venueId");
-    // console.log(venueId);
-    return Venues.findOne({"_id": venueId});
-  }
 });
 
 Template.EditVenue.helpers({
@@ -49,6 +43,7 @@ Template.AddVenue.events({
     const target = event.target;
     const venueName = target.venueName.value;
     const venueDescription = target.venueDescription.value;
+    const venueSensorId = target.venueSensorId.value;
     const venueLatitude = target.venueLatitude.value;
     const venueLongitude = target.venueLongitude.value;
     const venueOpeningHours = target.venueOpeningHours.value;
@@ -57,7 +52,7 @@ Template.AddVenue.events({
     const venueNews = target.venueNews.value;
  
     // Insert a venue into the collection
-    Meteor.call('venues.insert', venueName, venueDescription, 
+    Meteor.call('venues.insert', venueName, venueDescription, venueSensorId,
       venueLatitude, venueLongitude, venueOpeningHours, 
       venueWebsite, venueBooking, venueNews);
     // Clear form
@@ -77,6 +72,7 @@ Template.EditVenue.events({
     const venueId = this._id;
     const venueName = target.venueName.value;
     const venueDescription = target.venueDescription.value;
+    const venueSensorId = target.venueSensorId.value;
     const venueLatitude = target.venueLatitude.value;
     const venueLongitude = target.venueLongitude.value;
     const venueOpeningHours = target.venueOpeningHours.value;
@@ -85,7 +81,7 @@ Template.EditVenue.events({
     const venueNews = target.venueNews.value;
  
     // Insert a venue into the collection
-    Meteor.call('venues.update', venueId, venueName, venueDescription, 
+    Meteor.call('venues.update', venueId, venueName, venueDescription, venueSensorId,
       venueLatitude, venueLongitude, venueOpeningHours, 
       venueWebsite, venueBooking, venueNews);
     // Clear form
@@ -93,3 +89,4 @@ Template.EditVenue.events({
     window.location.assign("/venue/" + this._id);
   },
 });
+
