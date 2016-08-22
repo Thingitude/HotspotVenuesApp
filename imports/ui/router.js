@@ -19,7 +19,7 @@ FlowRouter.route('/editvenue/:venueId', {
 
 FlowRouter.route('/venueevents/:venueId', {
   action(params, queryParams) {
-    BlazeLayout.render("mainLayout", {content: "VenueEvents"});
+    BlazeLayout.render("mainLayout", {content: "VenueEventsList"});
   }
 });
 

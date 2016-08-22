@@ -26,9 +26,9 @@ Template.VenueList.helpers({
   },
 });
 
-Template.VenueEvents.helpers({
+
+Template.VenueEventsList.helpers({
   events() {
-    //console.log("body.js venuesssummary helper");
     return Events.find();
   },
   incompleteCount() {
@@ -41,36 +41,13 @@ Template.VenueEvents.helpers({
   },
 });
 
-Template.Event.helpers({
+/*Template.Event.helpers({
   thisEvent(){
     const eventId=FlowRouter.getParam("eventId");
     return Events.findOne({"_id": eventId});
   }
 });
-
-Template.VenueD.helpers({
-  thisVenue() {
-    const venueId=FlowRouter.getParam("venueId");
-    // console.log(venueId);
-    return Venues.findOne({"_id": venueId});
-  }
-});
-
-Template.VenueW.helpers({
-  thisVenue() {
-    const venueId=FlowRouter.getParam("venueId");
-    // console.log(venueId);
-    return Venues.findOne({"_id": venueId});
-  }
-});
-
-Template.VenueM.helpers({
-  thisVenue() {
-    const venueId=FlowRouter.getParam("venueId");
-    // console.log(venueId);
-    return Venues.findOne({"_id": venueId});
-  }
-});
+*/
 
 Template.EditVenue.helpers({
   thisVenue() {
@@ -99,6 +76,7 @@ Template.AddVenue.events({
     const target = event.target;
     const venueName = target.venueName.value;
     const venueDescription = target.venueDescription.value;
+    const venueSensorId = target.venueSensorId.value;
     const venueLatitude = target.venueLatitude.value;
     const venueLongitude = target.venueLongitude.value;
     const venueOpeningHours = target.venueOpeningHours.value;
@@ -123,6 +101,22 @@ Template.AddEvent.helpers({
     console.log("Adding Event: ", venueId);
     return Venues.findOne({"_id": venueId});
   },
+});
+
+Template.VenueEventsList.events({
+  'click .delete' : function() {
+    var confirmed = true;
+    if(Meteor.isClient){
+      console.log("deleting ", this._id);
+      confirmed = confirm("Are you sure you want to delete " + this.name)
+    }
+    if(confirmed === true)
+    {
+      console.log("Inside if");
+      Meteor.call('events.remove', this._id);
+    }
+  },
+
 });
 
 Template.AddEvent.events({
@@ -151,7 +145,6 @@ Template.AddEvent.events({
 
 Template.EditVenue.events({
   'submit .edit-venue'(event) {
-    //console.log("Save me!")
     // Prevent default browser form submit
     event.preventDefault();
  
@@ -160,6 +153,7 @@ Template.EditVenue.events({
     const venueId = this._id;
     const venueName = target.venueName.value;
     const venueDescription = target.venueDescription.value;
+    const venueSensorId = target.venueSensorId.value;
     const venueLatitude = target.venueLatitude.value;
     const venueLongitude = target.venueLongitude.value;
     const venueOpeningHours = target.venueOpeningHours.value;
@@ -188,6 +182,7 @@ Template.EditEvent.events({
     //get values from form
     const target = event.target;
     const eventId=this._id;
+    const venueId = target.venueId.value;
     const eventName = target.eventName.value;
     const eventDescription = target.eventDescription.value;
     const eventStartDate = target.eventStartDate.value;
@@ -195,10 +190,11 @@ Template.EditEvent.events({
     const eventStartTime = target.eventStartTime.value;
     const eventEndTime = target.eventEndTime.value;
     
+
     Meteor.call('events.update', eventName, eventDescription,
       eventStartDate, eventEndDate, eventStartTime, eventEndTime,eventId);
 
-    window.location.assign("/event/" + this._id);
+    window.location.assign("/venueevents/" + venueId);
   },
 });
 

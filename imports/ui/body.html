@@ -20,15 +20,21 @@
 
 <template name="VenueList">
   <h2>Venue list ({{incompleteCount}})</h2>
-  <a href="addvenue" name="addVenueBtn" type="button">Add</a>
+  <a type="button" name="addVenueBtn" class="btn btn-default" href="addvenue">
+  <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add a venue
+  </a>
   <div class="table-responsive">
     <table class="table">
       <thead>
-        <tr><th>Venue</th><th>Description</th><th>Select</th></tr>
+        <tr><th>Venue</th><th>Description</th><th>Stats / Edit</th></tr>
       </thead>
       <tbody>
         {{#each venues}}
-          <tr><td>{{name}}</td><td>{{description}}</td><td><a href="venue/{{this._id}}">Select</a></td></tr>
+          <tr><td>{{name}}</td><td>{{description}}</td><td>
+          <a type="button" class="btn btn-default" href="venue/{{this._id}}">
+          <span class="glyphicon glyphicon-stats" aria-hidden="true"></span></a>
+          <a type="button" class="btn btn-default" href="/editvenue/{{this._id}}">
+          <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a></td></tr>
         {{/each}}
       </tbody>
     </table>
@@ -37,185 +43,329 @@
 
 <template name="AddVenue">
   <h2>Add venue</h2>
-  <form class="add-venue">
-    <label>Venue name</label> <br/>
-    <input type="text" name="venueName" placeholder="The name of your venue" /> <br/>
-    <label>Description</label> <br/>
-    <input type="text" name="venueDescription" placeholder="Brief description" /> <br/>
-    <label>Sensor ID</label> <br/>
-    <input type="text" name="venueSensorId" placeholder="Your device EUI" /> <br/>
-    <label>Latitude and Longitude</label> <br/>
-    <input type="text" name="venueLatitude" placeholder="Get your latitude from Google maps" />
-    <input type="text" name="venueLongitude" placeholder="Get your longitude from Google maps" /> <br/>
-    <label>Opening hours</label> <br/>
-    <input type="text" name="venueOpeningHours" placeholder="e.g. Mon-Fri 12-10pm, Sat 10am-midnight, closed Sun" /> <br/>
-    <label>Phone:</label> <br/>
-    <input type="text" name="venuePhone" placeholder="Venue phone number" /> <br/>
-    <label>Link to your website</label> <br/>
-    <input type="text" name="venueWebsite" placeholder="Full URL (include http://)" /> <br/>
-    <label>Link to your booking/reservations</label> <br/>
-    <input type="text" name="venueBooking" placeholder="Full URL or leave blank" /> <br/>
-    <label>Link to your news/reviews</label> <br/>
-    <input type="text" name="venueNews" placeholder="Full URL or leave blank" /> <br/> <br/>
-    <input type="submit" value="Save">  <a href="/">Cancel</a>
+  <form class="add-venue form-horizontal">
+    <div class="form-group">
+      <label for="venueName" class="col-sm-2 control-label">Venue name</label>
+      <div class="col-sm-10">
+        <input class="form-control" type="text" name="venueName" placeholder="The name of your venue" />
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="venueDescription" class="col-sm-2 control-label">Description</label>
+      <div class="col-sm-10">
+        <textarea class="form-control" type="text" name="venueDescription" placeholder="Brief description"></textarea>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="venueSensorId" class="col-sm-2 control-label">Sensor ID</label>
+      <div class="col-sm-10">
+        <input class="form-control" type="text" name="venueSensorId" placeholder="Your device EUI" />
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="venueLatitiude" class="col-sm-2 control-label">Latitude and Longitude</label>
+      <div class="col-sm-5">
+        <input class="form-control" type="text" name="venueLatitude" placeholder="Get your latitude from Google maps" />
+      </div>
+      <div class="col-sm-5">
+        <input class="form-control" type="text" name="venueLongitude" placeholder="Get your longitude from Google maps" />
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="venueOpeningHours" class="col-sm-2 control-label">Opening hours</label>
+      <div class="col-sm-10">
+        <input class="form-control" type="text" name="venueOpeningHours" placeholder="e.g. Mon-Fri 12-10pm, Sat 10am-midnight, closed Sun" />
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="venuePhone" class="col-sm-2 control-label">Phone:</label>
+      <div class="col-sm-10">
+        <input class="form-control" type="text" name="venuePhone" placeholder="Venue phone number" />
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="venueWebsite" class="col-sm-2 control-label">Link to your website</label>
+      <div class="col-sm-10">
+        <input class="form-control" type="url" name="venueWebsite" placeholder="Full URL (include http://)" />
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="venueBooking" class="col-sm-2 control-label">Link to your booking/reservations</label>
+      <div class="col-sm-10">
+        <input class="form-control" type="url" name="venueBooking" placeholder="Full URL or leave blank" />
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="venueNews" class="col-sm-2 control-label">Link to your news/reviews</label>
+      <div class="col-sm-10">
+        <input class="form-control" type="url" name="venueNews" placeholder="Full URL or leave blank" />
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="col-sm-offset-2 col-sm-10">
+        <input class="btn btn-primary" type="submit" value="Save">  <a href="/" class="btn btn-default">Cancel</a>
+      </div>
+    </div>
    </form>
  </template>
 
 <template name="EditVenue">
 {{#with thisVenue}}
   <h2>Edit venue</h2>
-  <form class="edit-venue">
-    <label>Venue name</label> <br/>
-    <input type="text" name="venueName" value={{name}} /> <br/>
-    <label>Description</label> <br/>
-    <input type="text" name="venueDescription" value={{description}} /> <br/>
-    <label>Sensor ID</label> <br/>
-    <input type="text" name="venueSensorId" value={{sensorId}} /> <br/>
-    <label>Latitude and Longitude</label> <br/>
-    <input type="text" name="venueLatitude" value={{latitude}} />
-    <input type="text" name="venueLongitude" value={{longitude}} /> <br/>
-    <label>Opening hours</label> <br/>
-    <input type="text" name="venueOpeningHours" value={{openingHours}} /> <br/>
-    <label>Phone:</label> <br/>
-    <input type="text" name="venuePhone" value={{phone}} /> <br/>
-    <label>Link to your website</label> <br/>
-    <input type="text" name="venueWebsite" value={{websiteURL}} /> <br/>
-    <label>Link to your booking/reservations</label> <br/>
-    <input type="text" name="venueBooking" value={{bookingURL}} /> <br/>
-    <label>Link to your news/reviews</label> <br/>
-    <input type="text" name="venueNews" value={{newsURL}} /> <br/> <br/>
-    <input type="submit" value="Update">  <a href="/venue/{{_id}}">Cancel</a>
-  </form>
+  <form class="edit-venue form-horizontal">
+    <div class="form-group">
+      <label for="venueName" class="col-sm-2 control-label">Venue name</label>
+      <div class="col-sm-10">
+        <input class="form-control" type="text" name="venueName" value={{name}} />
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="venueDescription" class="col-sm-2 control-label">Description</label>
+      <div class="col-sm-10">
+        <textarea class="form-control" type="text" name="venueDescription" value={{description}}></textarea>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="venueSensorId" class="col-sm-2 control-label">Sensor ID</label>
+      <div class="col-sm-10">
+        <input class="form-control" type="text" name="venueSensorId" value={{sensorId}} />
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="venueLatitiude" class="col-sm-2 control-label">Latitude and Longitude</label>
+      <div class="col-sm-5">
+        <input class="form-control" type="text" name="venueLatitude" value={{latitude}} />
+      </div>
+      <div class="col-sm-5">
+        <input class="form-control" type="text" name="venueLongitude" value={{longitude}} />
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="venueOpeningHours" class="col-sm-2 control-label">Opening hours</label>
+      <div class="col-sm-10">
+        <input class="form-control" type="text" name="venueOpeningHours" value={{openingHours}} />
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="venuePhone" class="col-sm-2 control-label">Phone:</label>
+      <div class="col-sm-10">
+        <input class="form-control" type="text" name="venuePhone" value={{phone}} />
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="venueWebsite" class="col-sm-2 control-label">Link to your website</label>
+      <div class="col-sm-10">
+        <input class="form-control" type="url" name="venueWebsite" value={{websiteURL}} />
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="venueBooking" class="col-sm-2 control-label">Link to your booking/reservations</label>
+      <div class="col-sm-10">
+        <input class="form-control" type="url" name="venueBooking" value={{bookingURL}} />
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="venueNews" class="col-sm-2 control-label">Link to your news/reviews</label>
+      <div class="col-sm-10">
+        <input class="form-control" type="url" name="venueNews" value={{newsURL}} />
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="col-sm-offset-2 col-sm-10">
+        <input class="btn btn-primary" type="submit" value="Update">  <a href="/venue/{{_id}}" class="btn btn-default">Cancel</a>
+      </div>
+    </div>
+   </form>
+
 {{/with}}
 </template>
 
-<template name="EditEvent">
-{{#with thisEvent}}
-  <h2>Edit Event</h2>
-  
-  <form class="edit-event">
-    <label>Event name</label> <br/>
-    <input type="text" name="eventName" value={{name}} /> <br/>
-    <label>Description</label> <br/>
-    <input type="text" name="eventDescription" value={{description}} /> <br/>
-    <label>Start date</label> <br/>
-    <input type="text" name="eventStartDate" value={{startDate}} /> <br/>
-    <label>End date</label> <br/>
-    <input type="text" name="eventEndDate" value={{endDate}} /> <br/>
-    <label>Start time</label> <br/>
-    <input type="text" name="eventStartTime" value={{startTime}} /> <br/>
-    <label>End time</label> <br/>
-    <input type="text" name="eventEndTime" value={{endTime}} /> <br/> <br/>
-    <input type="submit" value="Update"> <a href="/event/{{_id}}">Cancel</a>
-  </form>  
-{{/with}}
+<template name="VenueNavBar">
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <ul class=" nav navbar-nav">
+            <li class="dropdown">
+              <a href="#" role="button" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Time frame<span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li><a href="/venue/{{_id}}">Today</a></li>
+                <li><a href="/venue/{{_id}}/w">This week</a></li>
+                <li><a href="/venue/{{_id}}/m">This month</a></li>
+                <li role="separator" class="divider"></li>
+                <li><a href="#">Custom date range</a></li>
+              </ul>
+            </li>
+          </ul>
+          <ul class="nav navbar-nav">
+            <li><a role="button"  href="/editvenue/{{_id}}">Edit venue</a></li>
+            <li><a href="/venueevents/{{_id}}">List events</a></li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="/">Return to venue list</a></li>
+          </ul>
+        </div>
+      </div><!-- /.container-fluid -->
+    </nav>
 </template>
 
-<template name="Event">
-{{#with thisEvent}}
-  <a href="/venueevents/{{_id}}">Back</a>  
-  <a href="/editevent/{{_id}}">Edit</a>
-  <h2>{{this.name}}</h2>
-  <h4>{{this.description}}</h4> <br/>
-  <h3>Dates: </h3> <p>{{this.startDate}} to {{this.endDate}}</p> <br/>
-  <h3>Times: </h3> <p>{{this.startTime}} to {{this.endTime}}</p> <br/>
-  <h3 style="color:red">Ratings and analytics go here</h3>
-
-{{/with}}
-</template>
 
 <template name="VenueD">
   {{#with thisVenue}}
     <h2>{{name}} </h2>
     <h3>"{{description}}"</h3>
-    <a href="/editvenue/{{_id}}">Edit this venue</a><br/>
-    <a href="/venueevents/{{_id}}">Show events for this venue</a><br/>
-    <form class="venue-data">
-      <input type="radio" name="timeframe" value="today" checked> Today<br>
-      <input type="radio" name="timeframe" value="week"> Week<br>
-      <input type="radio" name="timeframe" value="month"> Month<br>
-      <input type="submit" value="Refresh">
-    </form>
-    <br/>
+    {{>VenueNavBar}}
     <div id="chart">
       {{barChartDaily}}
     </div>
   {{/with}}
-  <a href="/">Return to venue list</a>
 </template>
 
 <template name="VenueW">
   {{#with thisVenue}}
     <h2>{{name}} </h2>
     <h3>"{{description}}"</h3>
-    <a href="/editvenue/{{_id}}">Edit this venue</a><br/>
-    <a href="/venueevents/{{_id}}">Show events for this venue</a><br/>
-    <form class="venue-data">
-      <input type="radio" name="timeframe" value="today"> Today<br>
-      <input type="radio" name="timeframe" value="week" checked> Week<br>
-      <input type="radio" name="timeframe" value="month"> Month<br>
-      <input type="submit" value="Refresh">
-    </form>
-    <br/>
+    {{>VenueNavBar}}
     <div id="chart">
       {{barChartWeek}}
     </div>
   {{/with}}
-  <a href="/">Return to venue list</a>
 </template>
 
 <template name="VenueM">
   {{#with thisVenue}}
     <h2>{{name}} </h2>
     <h3>"{{description}}"</h3>
-    <a href="/editvenue/{{_id}}">Edit this venue</a><br/>
-    <a href="/venueevents/{{_id}}">Show events for this venue</a><br/>
-    <form class="venue-data">
-      <input type="radio" name="timeframe" value="today"> Today<br>
-      <input type="radio" name="timeframe" value="week"> Week<br>
-      <input type="radio" name="timeframe" value="month" checked> Month<br>
-      <input type="submit" value="Refresh">
-    </form>
-    <br/>
+    {{>VenueNavBar}}
     <div id="chart">
       {{barChartMonth}}
     </div>
   {{/with}}
-  <a href="/">Return to venue list</a>
 </template>
 
 
-<template name="VenueEvents">
-  <h2>Events list</h2>
+
+<template name="EditEvent">
+{{#with thisEvent}}
+  <h2>Edit Event</h2>
+  <form class="edit-event form-horizontal">
+  <input class="hidden" type="hidden" name="venueId" value={{venueId}} />
+    <div class="form-group">
+      <label for="eventName" class="col-sm-2 control-label">Event name</label>
+      <div class="col-sm-10">
+        <input class="form-control" type="text" name="eventName" value={{name}} />
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="eventDescription" class="col-sm-2 control-label">Description</label>
+      <div class="col-sm-10">
+        <input class="form-control" type="text" name="eventDescription" value={{description}} />
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="eventStartDate" class="col-sm-2 control-label">Start date/time</label>
+      <div class="col-sm-5">
+        <input class="form-control" type="text" name="eventStartDate" value={{startDate}} />
+      </div>
+      <div class="col-sm-5">
+        <input class="form-control" type="text" name="eventStartTime" value={{startTime}} /> <br/>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="eventEndDate" class="col-sm-2 control-label">End date/time</label>
+      <div class="col-sm-5">
+        <input class="form-control" type="text" name="eventEndDate" value={{endDate}} />
+      </div>
+      <div class="col-sm-5">
+        <input class="form-control" type="text" name="eventEndTime" value={{endTime}} /> <br/>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="col-sm-offset-2 col-sm-10">
+        <input class="btn btn-primary" type="submit" value="Update">  <a href="/venueevents/{{venueId}}" class="btn btn-default">Cancel</a>
+      </div>
+    </div>
+  </form>  
+{{/with}}
+</template>
+
+
+
+<template name="VenueEventsList">
   {{#with thisVenue}}
-    <a href="/venue/{{_id}}">Back</a><br/><br/>
-    <a href="/addevent/{{_id}}" name="addEventBtn">Add</a><br/>
+  <h2>Events at {{name}}</h2>
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <ul class="nav navbar-nav">
+            <li><a role="button" name="addEventBtn" href="/addevent/{{this._id}}">
+              <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add event</a></li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="/venue/{{this._id}}">Return to venue</a></li>
+          </ul>
+        </div>
+      </div><!-- /.container-fluid -->
+    </nav>
+  <div class="table-responsive">
+    <table class="table">
+      <thead>
+        <tr><th>Event</th><th>Description</th><th>Start date/time</th><th>End date/time</th><th>Edit / delete</th></tr>
+      </thead>
+      <tbody>
+        {{#each events}}
+          <tr><td>{{name}}</td><td>{{description}}</td><td>{{startDate}} @ {{startTime}}</td><td>{{endDate}} @ {{endTime}}</td><td>
+            <a type="button" class="btn btn-default" href="/editevent/{{this._id}}">
+            <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a>
+            <button class="btn btn-default delete" ><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+          </td></tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
   {{/with}}
-
-  {{#each events}}
-    {{> eventsummary}}
-  {{/each}}
-  
 </template>
- 
+
+
 <template name="AddEvent">
   <h2>Add Event</h2>
   {{#with thisVenue}}
-  <form class="add-event">
-    <label>Event name</label> <br/>
-    <input type="text" name="eventName" placeholder="The name of your event" /> <br/>
-    <label>Description</label> <br/>
-    <input type="text" name="eventDescription" placeholder="Brief description" /> <br/>
-    <label>Start Date</label> <br/>
-    <input type="date" name="eventStartDate" placeholder="" /> <br/>
-    <label>Start Time</label> <br/>
-    <input type="time" name="eventStartTime" /> <br/>
-    <label>End Date</label> <br/>
-    <input type="date" name="eventEndDate" placeholder="" /> <br/>
-    <label>End Time</label> <br/>
-    <input type="time" name="eventEndTime" /> <br/>
-    <input type="submit" value="Save">  <a href="/">Cancel</a>
-   </form>
+  <form class="add-event form-horizontal">
+    <div class="form-group">
+      <label for="eventName" class="col-sm-2 control-label">Event name</label>
+      <div class="col-sm-10">
+        <input class="form-control" type="text" name="eventName" placeholder="The name of your event" />
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="eventDescription" class="col-sm-2 control-label">Description</label>
+      <div class="col-sm-10">
+        <input class="form-control" type="text" name="eventDescription" placeholder="Brief description" />
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="eventStartDate" class="col-sm-2 control-label">Start date/time</label>
+      <div class="col-sm-5">
+        <input class="form-control" type="text" name="eventStartDate" placeholder="" />
+      </div>
+      <div class="col-sm-5">
+        <input class="form-control" type="text" name="eventStartTime" placeholder="" /> <br/>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="eventEndDate" class="col-sm-2 control-label">End date/time</label>
+      <div class="col-sm-5">
+        <input class="form-control" type="text" name="eventEndDate" placeholder="" />
+      </div>
+      <div class="col-sm-5">
+        <input class="form-control" type="text" name="eventEndTime" placeholder="" /> <br/>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="col-sm-offset-2 col-sm-10">
+        <input class="btn btn-primary" type="submit" value="Save">  <a href="/event/{{_id}}" class="btn btn-default">Cancel</a>
+      </div>
+    </div>
+  </form>  
    {{/with}}
 </template>
 
