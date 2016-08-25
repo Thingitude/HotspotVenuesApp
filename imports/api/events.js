@@ -18,8 +18,7 @@ if (Meteor.isServer) {
 
 Meteor.methods({
   'events.insert'(name, description, 
-      startDate, endDate, startTime, 
-      endTime, venueId) {
+      startDateTime, endDateTime, venueId) {
     console.log("run events.insert");
     check(name, String);
  
@@ -31,16 +30,13 @@ Meteor.methods({
     Events.insert({
       name, 
       description, 
-      startDate, 
-      endDate, 
-      startTime, 
-      endTime, 
+      startDateTime, 
+      endDateTime,  
       venueId
     });
   },
   'events.update'(name, description, 
-      startDate, endDate, startTime, 
-      endTime, eventId) {
+      startDateTime, endDateTime, eventId) {
     console.log("run events.update");
     check(name, String);
 
@@ -51,10 +47,8 @@ Meteor.methods({
     Events.update(eventId, {
       $set: {name, 
       description, 
-      startDate, 
-      endDate, 
-      startTime, 
-      endTime
+      startDateTime, 
+      endDateTime
       }
     });
   },

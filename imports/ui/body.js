@@ -129,16 +129,14 @@ Template.AddEvent.events({
     const target = event.target;
     const eventName = target.eventName.value;
     const eventDescription = target.eventDescription.value;
-    const eventStartDate = target.eventStartDate.value;
-    const eventEndDate = target.eventEndDate.value;
-    const eventStartTime = target.eventStartTime.value;
-    const eventEndTime = target.eventEndTime.value;
+    const eventStartDateTime = target.eventStartDate.value;
+    const eventEndDateTime = target.eventEndDate.value;
 
     console.log("Adding events");
     
     //insert above data into db
     Meteor.call('events.insert', eventName, eventDescription,
-      eventStartDate, eventEndDate, eventStartTime, eventEndTime, this._id);
+      eventStartDateTime, eventEndDateTime, this._id);
     window.location.assign("/venueevents/" + this._id);
   },
 });
@@ -185,14 +183,11 @@ Template.EditEvent.events({
     const venueId = target.venueId.value;
     const eventName = target.eventName.value;
     const eventDescription = target.eventDescription.value;
-    const eventStartDate = target.eventStartDate.value;
-    const eventEndDate = target.eventEndDate.value;
-    const eventStartTime = target.eventStartTime.value;
-    const eventEndTime = target.eventEndTime.value;
-    
+    const eventStartDateTime = target.eventStartDateTime.value;
+    const eventEndDateTime = target.eventEndDateTime.value;    
 
     Meteor.call('events.update', eventName, eventDescription,
-      eventStartDate, eventEndDate, eventStartTime, eventEndTime,eventId);
+      eventStartDateTime, eventEndDateTime, eventId);
 
     window.location.assign("/venueevents/" + venueId);
   },
