@@ -29,10 +29,12 @@ Template.VenueList.helpers({
 
 Template.VenueEventsList.helpers({
   events() {
-    return Events.find();
+    const venueId=FlowRouter.getParam("venueId");
+    return Events.find({"venueId": venueId});
   },
   incompleteCount() {
-    return Events.find().count();
+    const venueId=FlowRouter.getParam("venueId");
+    return Events.find({"venueId": venueId}).count();
   },
   thisVenue() {
     const venueId=FlowRouter.getParam("venueId");
