@@ -8,9 +8,11 @@ if (Meteor.isServer) {
   // This code only runs on the server
   // Only publish venues that belong to the current user
   Meteor.publish('venues', function venuesPublication() {
-    return Venues.find({owner: this.userId});
+    return Venues.find();
   });
 }
+
+
  
 Meteor.methods({
   'venues.insert'(name, description, sensorId,

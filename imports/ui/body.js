@@ -1,4 +1,5 @@
 import { Meteor } from 'meteor/meteor';
+import { Mongo } from 'meteor/mongo';
 import { Template } from 'meteor/templating';
 
 import { Venues } from '../api/venues.js';
@@ -10,7 +11,6 @@ import './event.js';
 import './body.html';
 
 Debug = Venues;
- 
 
 Template.body.onCreated(function bodyOnCreated() {
   this.state = new ReactiveDict();
@@ -21,21 +21,13 @@ Template.body.onCreated(function bodyOnCreated() {
 Template.VenueList.helpers({
   venues() {
     //console.log("body.js venuesssummary helper");
-    console.log(Venues.find());
-    return Venues.find();
+    //console.log(Venues.find({"owner": this.userId}));
+    return Venues.find({owner: Meteor.userId()});
   },
   incompleteCount() {
-    return Venues.find().count();
+    return Venues.find({owner: Meteor.userId()}).count();
   },
 });
-
-Template.CompareVenueSelect.helpers({
-    venues() {
-    //console.log("body.js venuesssummary helper");
-    return Venues.find();
-  }
-});
-
 
 Template.VenueEventsList.helpers({
   events() {
@@ -64,12 +56,12 @@ Template.VenueEventsList.helpers({
 Template.CompareVenueSelect.helpers({
   thisVenue(){
     const venueId=FlowRouter.getParam("venueId");
-    return Venues.findOne({"_id": venueId});
+    return venueId;
   },
   venues() {
     //console.log("body.js venuesssummary helper");
     console.log("venue");
-    return Venues.find();
+    return Venues.find({owner: {$ne : Meteor.userId()}});
   },
 });
 
@@ -109,8 +101,6 @@ Template.AddVenue.events({
     const venueName = target.venueName.value;
     const venueDescription = target.venueDescription.value;
     const venueSensorId = target.venueSensorId.value;
-    const venueLogStart = target.venueLogStart.value;
-    const venueLogEnd = target.venueLogEnd.value;
     const venueLatitude = target.venueLatitude.value;
     const venueLongitude = target.venueLongitude.value;
     const venueOpeningHours = target.venueOpeningHours.value;
@@ -121,7 +111,7 @@ Template.AddVenue.events({
  
     // Insert a venue into the collection
     Meteor.call('venues.insert', venueName, venueDescription, venueSensorId,
-      venueLogStart, venueLogEnd, venueLatitude, venueLongitude, venueOpeningHours, 
+      venueLatitude, venueLongitude, venueOpeningHours, 
       venuePhone, venueWebsite, venueBooking, venueNews);
     // Clear form
     //target.text.value = '';
@@ -186,8 +176,6 @@ Template.EditVenue.events({
     const venueName = target.venueName.value;
     const venueDescription = target.venueDescription.value;
     const venueSensorId = target.venueSensorId.value;
-    const venueLogStart = target.venueLogStart.value;
-    const venueLogEnd = target.venueLogEnd.value;
     const venueLatitude = target.venueLatitude.value;
     const venueLongitude = target.venueLongitude.value;
     const venueOpeningHours = target.venueOpeningHours.value;
@@ -198,7 +186,7 @@ Template.EditVenue.events({
  
     // Insert a venue into the collection
     Meteor.call('venues.update', venueId, venueName, venueDescription, venueSensorId, 
-      venueLogStart, venueLogEnd, venueLatitude, venueLongitude, venueOpeningHours, 
+      venueLatitude, venueLongitude, venueOpeningHours, 
       venuePhone, venueWebsite, venueBooking, venueNews);
     // Clear form
     //target.text.value = '';
@@ -230,3 +218,5 @@ Template.EditEvent.events({
     window.location.assign("/venueevents/" + venueId);
   },
 });
+
+
