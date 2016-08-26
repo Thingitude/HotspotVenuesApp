@@ -64,11 +64,15 @@
     </div>
     <div class="form-group">
       <label for="venueLogStart" class="col-sm-2 control-label">Log stats between</label>
-      <div class="col-sm-5">
-        <input class="form-control" type="text" name="venueLogStart" placeholder="Start time HH:MM" />
+      <div class="col-sm-2">
+        {{#datetimepicker format='HH:mm' keepOpen=false viewMode='days'}}
+          <input class="form-control" type="time" name="venueLogStart" placeholder="Start time HH:MM" />
+        {{/datetimepicker}}
       </div>
-      <div class="col-sm-5">
-        <input class="form-control" type="text" name="venueLogEnd" placeholder="Stop time HH:MM" />
+      <div class="col-sm-2">
+        {{#datetimepicker format='HH:mm' keepOpen=false viewMode='days'}}
+          <input class="form-control" type="time" name="venueLogEnd" placeholder="Stop time HH:MM" />
+        {{/datetimepicker}}
       </div>
     </div>
     <div class="form-group">
@@ -142,11 +146,15 @@
     </div>
     <div class="form-group">
       <label for="venueLogStart" class="col-sm-2 control-label">Log stats between</label>
-      <div class="col-sm-5">
-        <input class="form-control" type="text" name="venueLogStart" value={{logStart}} />
+      <div class="col-sm-2">
+        {{#datetimepicker format='HH:mm' keepOpen=false viewMode='days'}}
+          <input class="form-control" type="time" name="venueLogStart" value={{logStart}} />
+        {{/datetimepicker}}
       </div>
-      <div class="col-sm-5">
-        <input class="form-control" type="text" name="venueLogEnd" value={{logEnd}} />
+      <div class="col-sm-2">
+        {{#datetimepicker format='HH:mm' keepOpen=false viewMode='days'}}
+          <input class="form-control" type="time" name="venueLogEnd" value={{logEnd}} />
+        {{/datetimepicker}}
       </div>
     </div>
     <div class="form-group">
