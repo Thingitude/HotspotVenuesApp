@@ -14,7 +14,7 @@ if (Meteor.isServer) {
  
 Meteor.methods({
   'venues.insert'(name, description, sensorId,
-      latitude, longitude, openingHours, 
+      logStart, logEnd, latitude, longitude, openingHours, 
       phone, websiteURL, bookingURL,newsURL) {
     console.log("run venues.insert");
     check(name, String);
@@ -27,6 +27,9 @@ Meteor.methods({
     Venues.insert({
       name, 
       description, 
+      sensorId,
+      logStart,
+      logEnd,
       latitude, 
       longitude, 
       openingHours, 
@@ -38,8 +41,8 @@ Meteor.methods({
       username: Meteor.users.findOne(this.userId).username,
     });
   },
-  'venues.update'(venueId, name, description, 
-      latitude, longitude, openingHours, 
+  'venues.update'(venueId, name, description,sensorId, 
+      logStart, logEnd, latitude, longitude, openingHours, 
       phone, websiteURL, bookingURL,newsURL) {
     console.log("run venues.insert");
     check(name, String);
@@ -54,6 +57,9 @@ Meteor.methods({
     Venues.update(venueId, {
       $set: {name, 
         description, 
+        sensorId,
+        logStart,
+        logEnd,
         latitude, 
         longitude, 
         openingHours, 

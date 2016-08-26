@@ -61,6 +61,12 @@ Template.VenueM.onCreated(function VenueOnCreated() {
   Meteor.subscribe('sensorData');
 });
 
+Template.VenueX.onCreated(function VenueOnCreated() {
+  this.state = new ReactiveDict();
+  Meteor.subscribe('dailyAggregates');
+  Meteor.subscribe('sensorData');
+});
+
 
 Template.VenueD.helpers({
   thisVenue() {
@@ -111,7 +117,7 @@ Template.VenueD.helpers({
           tooltip: {
               headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
               pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-                  '<td style="padding:0"><b>{point.y:.1f} mm</b></td></tr>',
+                  '<td style="padding:0"><b>{point.y:.0f}</b></td></tr>',
               footerFormat: '</table>',
               shared: true,
               useHTML: true
@@ -184,7 +190,7 @@ Template.VenueW.helpers({
 				tooltip: {
 				  headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
 				  pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-				      '<td style="padding:0"><b>{point.y:.1f} mm</b></td></tr>',
+				      '<td style="padding:0"><b>{point.y:.0f}</b></td></tr>',
 				  footerFormat: '</table>',
 				  shared: true,
 				  useHTML: true
@@ -202,126 +208,226 @@ Template.VenueW.helpers({
 });
 
 Template.VenueM.helpers({
-	thisVenue() {
-	    const venueId=FlowRouter.getParam("venueId");
-	    // console.log(venueId);
-	    return Venues.findOne({"_id": venueId});
-	},
+  thisVenue() {
+      const venueId=FlowRouter.getParam("venueId");
+      // console.log(venueId);
+      return Venues.findOne({"_id": venueId});
+  },
 
-	barChartMonth: function () {
-	    var i=0;
-	    var peopleSeries=[{type: "column", name: "totalPeople", data:[]},
-	                      {type: "column", name: "avgPeople", data:[]},
-	                      {type: "column", name: "maxPeople", data:[]}];
-	    var peopleDates=[];
+  barChartMonth: function () {
+      var i=0;
+      var peopleSeries=[{type: "column", name: "totalPeople", data:[]},
+                        {type: "column", name: "avgPeople", data:[]},
+                        {type: "column", name: "maxPeople", data:[]}];
+      var peopleDates=[];
 
-	    var today= new Date();
-	    var dayOfYear=dateToDay(today);
-	    var dayOfMonth=today.getDate();
-	    var startOfMonth=dayOfYear-dayOfMonth;
-	    var monthStartDate=new Date(today.getFullYear(),today.getMonth(),1);
+      var today= new Date();
+      var dayOfYear=dateToDay(today);
+      var dayOfMonth=today.getDate();
+      var startOfMonth=dayOfYear-dayOfMonth;
+      var monthStartDate=new Date(today.getFullYear(),today.getMonth(),1);
 
-	    var thisVenueSeries=DailyAggregates.find({"sensorId": this.sensorId, "dayOfYear": {$gte: startOfMonth }}).fetch();
-	    
-	    thisVenueSeries.forEach(function(doc) {
-	      peopleSeries[0].data.push(doc.totalPeople);
-	      peopleSeries[1].data.push(doc.avgPeople);
-	      peopleSeries[2].data.push(doc.maxPeople);
-	      peopleDates.push(doc.dayOfMonth);
-	    });
-	    //console.log(peopleSeries);
-	    //console.log(peopleDates);
-	    
-	    // Use Meteor.defer() to create chart after DOM is ready:
-	    Meteor.defer(function() {
-	    	Highcharts.chart('chart', {
-				title: {
-				  text: 'People in venue since ' + monthStartDate.toDateString()
-				},
-				subtitle: {
-				  text: "Provided by Reading Hotspot"
-				},
-				xAxis: {
-				  categories: peopleDates,
-				  crosshair: true
-				},
-				yAxis: {
-				  min: 0,
-				  title: {
-				      text: 'People in venue'
-				  }
-				},
-				tooltip: {
-				  headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
-				  pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-				      '<td style="padding:0"><b>{point.y:.1f} mm</b></td></tr>',
-				  footerFormat: '</table>',
-				  shared: true,
-				  useHTML: true
-				},
-				plotOptions: {
-				  column: {
-				      pointPadding: 0.2,
-				      borderWidth: 0
-				  }
-				},
-				series: peopleSeries
-			});
-	    });
-	}
+      var thisVenueSeries=DailyAggregates.find({"sensorId": this.sensorId, "dayOfYear": {$gte: startOfMonth }}).fetch();
+      
+      thisVenueSeries.forEach(function(doc) {
+        peopleSeries[0].data.push(doc.totalPeople);
+        peopleSeries[1].data.push(doc.avgPeople);
+        peopleSeries[2].data.push(doc.maxPeople);
+        peopleDates.push(doc.dayOfMonth);
+      });
+      //console.log(peopleSeries);
+      //console.log(peopleDates);
+      
+      // Use Meteor.defer() to create chart after DOM is ready:
+      Meteor.defer(function() {
+        Highcharts.chart('chart', {
+        title: {
+          text: 'People in venue since ' + monthStartDate.toDateString()
+        },
+        subtitle: {
+          text: "Provided by Reading Hotspot"
+        },
+        xAxis: {
+          categories: peopleDates,
+          crosshair: true
+        },
+        yAxis: {
+          min: 0,
+          title: {
+              text: 'People in venue'
+          }
+        },
+        tooltip: {
+          headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+          pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+              '<td style="padding:0"><b>{point.y:.0f}</b></td></tr>',
+          footerFormat: '</table>',
+          shared: true,
+          useHTML: true
+        },
+        plotOptions: {
+          column: {
+              pointPadding: 0.2,
+              borderWidth: 0
+          }
+        },
+        series: peopleSeries
+      });
+      });
+  }
 });
 
-
-Template.VenueD.events({
-  'submit .venue-data'(event) {
-    //console.log("Save me!")
-    // Prevent default browser form submit
-    event.preventDefault();
- 
-    // Get value from form element
-    const target = event.target;
-    if(target.timeframe.value=='today') {
-    	window.location.assign("/venue/" + this._id);
-    } else if (target.timeframe.value=='week') {
-    	window.location.assign("/venue/" + this._id + "/w");
-    } else {
-    	window.location.assign("/venue/" +this._id + "/m");
+Template.VenueX.helpers({
+  thisVenue() {
+      const venueId=FlowRouter.getParam("venueId");
+      // console.log(venueId);
+      return Venues.findOne({"_id": venueId});
+  },
+  thisStartDate() {
+    var startDate = FlowRouter.getQueryParam("start");
+    if(startDate==null) {
+      var today= new Date();
+      var thisYear=today.getFullYear();
+      var thisMonth=today.getMonth();
+      var dayOfMonth=today.getDate();
+      startDate=thisYear+'-'+thisMonth+'-'+dayOfMonth; 
     }
+    return startDate;
+  },
+  thisEndDate() {
+    var endDate = FlowRouter.getQueryParam("end");
+    if(endDate==null) {
+      var today= new Date();
+      var thisYear=today.getFullYear();
+      var thisMonth=today.getMonth()+1;
+      var dayOfMonth=today.getDate();
+      endDate=thisYear+'-'+thisMonth+'-'+dayOfMonth; 
+    }
+    return endDate;
+  },
+
+  barChartCustom: function () {
+    var i=0;
+    var peopleSeries=[{type: "column", name: "totalPeople", data:[]},
+                      {type: "column", name: "avgPeople", data:[]},
+                      {type: "column", name: "maxPeople", data:[]}];
+    var peopleDates=[];
+
+    var chartStartDate=FlowRouter.getQueryParam("start");
+    var chartEndDate=FlowRouter.getQueryParam("end");
+
+    var today= new Date();
+    var dayOfYear=dateToDay(today);
+    var dayOfMonth=today.getDate();
+    var startOfMonth=dayOfYear-dayOfMonth;
+    var monthStartDate=new Date(today.getFullYear(),today.getMonth(),1);
+
+    if(chartStartDate== null) {
+      console.log("No start date specified");
+      chartStartDate=monthStartDate;
+    } else {
+      chartStartDate=new Date(chartStartDate);
+    };
+    if(chartEndDate== null) {
+      console.log("No end date specified");
+      chartEndDate=today;
+    } else {
+      chartEndDate=new Date(chartEndDate);
+    };
+
+    var startYear=chartStartDate.getFullYear();
+    var startDayOfYear=dateToDay(chartStartDate);
+    var startMonth=chartStartDate.getMonth();
+    var startDayOfMonth=chartStartDate.getDate();
+    var endYear=chartEndDate.getFullYear();
+    var endDayOfYear=dateToDay(chartEndDate);
+    var sensorId=this.sensorId;
+
+    console.log("Start - ",chartStartDate, " and End - ", chartEndDate);
+    console.log("Sensor: ", sensorId);
+
+    var thisVenueSeries=DailyAggregates.find({"sensorId": sensorId, "date": {$gte: chartStartDate, $lt: chartEndDate} }).fetch();
+  
+    thisVenueSeries.forEach(function(doc) {
+      peopleSeries[0].data.push(doc.totalPeople);
+      peopleSeries[1].data.push(doc.avgPeople);
+      peopleSeries[2].data.push(doc.maxPeople);
+      peopleDates.push(doc.dayOfMonth);
+    });
+    console.log(peopleSeries);
+
+    //console.log(peopleDates);
+    
+    // Use Meteor.defer() to create chart after DOM is ready:
+    Meteor.defer(function() {
+      Highcharts.chart('chart', {
+        title: {
+          text: 'People in venue from ' + chartStartDate.toDateString() + ' to ' + chartEndDate.toDateString()
+        },
+        subtitle: {
+          text: "Provided by Reading Hotspot"
+        },
+        xAxis: {
+          categories: peopleDates,
+          crosshair: true
+        },
+        yAxis: {
+          min: 0,
+          title: {
+              text: 'People in venue'
+          }
+        },
+        tooltip: {
+          headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+          pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+              '<td style="padding:0"><b>{point.y:.0f}</b></td></tr>',
+          footerFormat: '</table>',
+          shared: true,
+          useHTML: true
+        },
+        plotOptions: {
+          column: {
+            pointPadding: 0.2,
+            borderWidth: 0
+          }
+        },
+        series: peopleSeries
+      });
+    });
   },
 });
 
-Template.VenueW.events({
-  'submit .venue-data'(event) {
-    //console.log("Save me!")
-    // Prevent default browser form submit
+Template.VenueX.events({
+  'submit .set-date-range'(event) {
+    var today= new Date();
+    var thisYear=today.getFullYear();
+    var thisMonth=today.getMonth();
+    var dayOfMonth=today.getDate();
+    
+    //prevent the browser from submitting
     event.preventDefault();
- 
-    // Get value from form element
+
+    //get values from form
     const target = event.target;
-    if(target.timeframe.value=='today') {
-    	window.location.assign("/venue/" + this._id);
-    } else if (target.timeframe.value=='week') {
-    	window.location.assign("/venue/" + this._id + "/w");
-    } else {
-    	window.location.assign("/venue/" +this._id + "/m");
-    }
-  },
-});
- 
-Template.VenueM.events({
-  'submit .venue-data'(event) {
-    //console.log("Save me!")
-    // Prevent default browser form submit
-    event.preventDefault();
- 
-    // Get value from form element
-    const target = event.target;
-    if(target.timeframe.value=='today') {
-    	window.location.assign("/venue/" + this._id);
-    } else if (target.timeframe.value=='week') {
-    	window.location.assign("/venue/" + this._id + "/w");
-    } else {
-    	window.location.assign("/venue/" +this._id + "/m");
-    }
-  },
+    var startDate = target.startDate.value;
+    var endDate = target.endDate.value;
+    if(startDate=='') {
+      if(thisMonth <10) {
+        thisMonth='0'+thisMonth;
+      }
+      startDate=thisYear+'-'+thisMonth+'-'+dayOfMonth; 
+    }    
+    if(endDate=='') {
+      thisMonth++;
+      if(thisMonth <10) {
+        thisMonth='0'+thisMonth;
+      }
+      endDate=thisYear+'-'+thisMonth+'-'+dayOfMonth; 
+    }    
+
+    //barChartCustom(startDate, endDate);
+    console.log("Dates are ", startDate, " and ", endDate);
+    //conole.log("Force break");
+    window.location.assign("/venue/"+FlowRouter.getParam("venueId")+"/x?start="+startDate+"&end="+endDate);
+  }
 });

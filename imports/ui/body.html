@@ -1,6 +1,6 @@
 <template name="mainLayout">
   <body>
-    <div class="container">
+    <div class="container-fluid">
       <header>
         <h1>Hotspot venues {{incompleteCount}}</h1>
    
@@ -23,7 +23,7 @@
   <a type="button" name="addVenueBtn" class="btn btn-default" href="addvenue">
   <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add a venue
   </a>
-  <div class="table-responsive">
+  <div class="table">
     <table class="table">
       <thead>
         <tr><th>Venue</th><th>Description</th><th>Stats / Edit</th></tr>
@@ -60,6 +60,15 @@
       <label for="venueSensorId" class="col-sm-2 control-label">Sensor ID</label>
       <div class="col-sm-10">
         <input class="form-control" type="text" name="venueSensorId" placeholder="Your device EUI" />
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="venueLogStart" class="col-sm-2 control-label">Log stats between</label>
+      <div class="col-sm-5">
+        <input class="form-control" type="text" name="venueLogStart" placeholder="Start time HH:MM" />
+      </div>
+      <div class="col-sm-5">
+        <input class="form-control" type="text" name="venueLogEnd" placeholder="Stop time HH:MM" />
       </div>
     </div>
     <div class="form-group">
@@ -132,6 +141,15 @@
       </div>
     </div>
     <div class="form-group">
+      <label for="venueLogStart" class="col-sm-2 control-label">Log stats between</label>
+      <div class="col-sm-5">
+        <input class="form-control" type="text" name="venueLogStart" value={{logStart}} />
+      </div>
+      <div class="col-sm-5">
+        <input class="form-control" type="text" name="venueLogEnd" value={{logEnd}} />
+      </div>
+    </div>
+    <div class="form-group">
       <label for="venueLatitiude" class="col-sm-2 control-label">Latitude and Longitude</label>
       <div class="col-sm-5">
         <input class="form-control" type="text" name="venueLatitude" value={{latitude}} />
@@ -183,6 +201,14 @@
 <template name="VenueNavBar">
     <nav class="navbar navbar-default">
       <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+        </div>
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
           <ul class=" nav navbar-nav">
             <li class="dropdown">
@@ -191,8 +217,7 @@
                 <li><a href="/venue/{{_id}}">Today</a></li>
                 <li><a href="/venue/{{_id}}/w">This week</a></li>
                 <li><a href="/venue/{{_id}}/m">This month</a></li>
-                <li role="separator" class="divider"></li>
-                <li><a href="#">Custom date range</a></li>
+                <li><a href="/venue/{{_id}}/x">Custom dates</a></li>
               </ul>
             </li>
           </ul>
@@ -242,6 +267,38 @@
   {{/with}}
 </template>
 
+<template name="VenueX">
+  {{#with thisVenue}}
+    <h2>{{name}} </h2>
+    <h3>"{{description}}"</h3>
+    {{>VenueNavBar}}
+    <form class="set-date-range form-horizontal">
+      <input class="hidden" type="hidden" name="venueId" value={{venueId}} />
+      <input class="hidden" type="hidden" name="sensorId" value={{sensorId}} />
+      <div class="form-group">
+        <label for="startDate" class="col-sm-2 control-label">Start date</label>
+        <div class="col-sm-2">
+          {{#datetimepicker format='YYYY-MM-DD' keepOpen=false viewMode='days'}}
+            <input class="form-control" type="text" name="startDate" value={{thisStartDate}} />
+          {{/datetimepicker}}
+        </div>
+        <label for="endDate" class="col-sm-1 control-label">End date</label>
+        <div class="col-sm-2">
+          {{#datetimepicker format='YYYY-MM-DD' keepOpen=false viewMode='days'}}
+            <input class="form-control" type="text" name="endDate" value={{thisEndDate}} />
+          {{/datetimepicker}}
+        </div>
+        <div class="col-sm-2 ">
+          <input class="btn btn-primary" type="submit" value="Show"> 
+        </div>
+      </div>
+    </form>  
+    
+    <div id="chart">
+      {{barChartCustom}}
+    </div>
+  {{/with}}
+</template>
 
 
 <template name="EditEvent">
@@ -295,6 +352,14 @@
   <h2>Events at {{name}}</h2>
     <nav class="navbar navbar-default">
       <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+        </div>
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
           <ul class="nav navbar-nav">
             <li><a role="button" name="addEventBtn" href="/addevent/{{this._id}}">

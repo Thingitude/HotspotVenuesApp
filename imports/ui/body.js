@@ -77,6 +77,8 @@ Template.AddVenue.events({
     const venueName = target.venueName.value;
     const venueDescription = target.venueDescription.value;
     const venueSensorId = target.venueSensorId.value;
+    const venueLogStart = target.venueLogStart.value;
+    const venueLogEnd = target.venueLogEnd.value;
     const venueLatitude = target.venueLatitude.value;
     const venueLongitude = target.venueLongitude.value;
     const venueOpeningHours = target.venueOpeningHours.value;
@@ -87,7 +89,7 @@ Template.AddVenue.events({
  
     // Insert a venue into the collection
     Meteor.call('venues.insert', venueName, venueDescription, venueSensorId,
-      venueLatitude, venueLongitude, venueOpeningHours, 
+      venueLogStart, venueLogEnd, venueLatitude, venueLongitude, venueOpeningHours, 
       venuePhone, venueWebsite, venueBooking, venueNews);
     // Clear form
     //target.text.value = '';
@@ -154,6 +156,8 @@ Template.EditVenue.events({
     const venueName = target.venueName.value;
     const venueDescription = target.venueDescription.value;
     const venueSensorId = target.venueSensorId.value;
+    const venueLogStart = target.venueLogStart.value;
+    const venueLogEnd = target.venueLogEnd.value;
     const venueLatitude = target.venueLatitude.value;
     const venueLongitude = target.venueLongitude.value;
     const venueOpeningHours = target.venueOpeningHours.value;
@@ -164,7 +168,7 @@ Template.EditVenue.events({
  
     // Insert a venue into the collection
     Meteor.call('venues.update', venueId, venueName, venueDescription, venueSensorId, 
-      venueLatitude, venueLongitude, venueOpeningHours, 
+      venueLogStart, venueLogEnd, venueLatitude, venueLongitude, venueOpeningHours, 
       venuePhone, venueWebsite, venueBooking, venueNews);
     // Clear form
     //target.text.value = '';
@@ -197,5 +201,3 @@ Template.EditEvent.events({
     window.location.assign("/venueevents/" + venueId);
   },
 });
-
-

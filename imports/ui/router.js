@@ -41,6 +41,12 @@ FlowRouter.route('/venue/:venueId/m', {
   }
 });
 
+FlowRouter.route('/venue/:venueId/x', {
+  action(params, queryParams) {
+    BlazeLayout.render("mainLayout", {content: "VenueX"});
+  }
+});
+
 FlowRouter.route('/addevent/:venueId', {
   action(params, queryParams) {
     BlazeLayout.render("mainLayout", {content: "AddEvent"});
