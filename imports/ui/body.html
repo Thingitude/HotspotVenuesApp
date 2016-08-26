@@ -418,6 +418,34 @@
   {{/with}}
 </template>
 
+<template name="Compare">
+  {{#with CompareVenue}}
+  {{#with OwnerVenue}}
+    <h2>Compare {{name}} with {{CompareVenue.name}}</h2>
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="/compare/{{this._id}}">Return to compare list</a></li>
+          </ul>
+        </div>
+      </div><!-- /.container-fluid -->
+    </nav>
+    <div class="table-responsive">
+      <table class="table">
+        <thead>
+          <tr><th>Heading</th><th>{{name}}</th><th>{{CompareVenue.name}}</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Description</td><td>{{description}}</td><td>{{CompareVenue.description}}</td></tr>
+          <tr><td>Opening Hours</td><td>{{openingHours}}</td><td>{{CompareVenue.openingHours}}</td></tr>
+        </tbody>
+      </table>
+    </div>
+  {{/with}}
+  {{/with}}
+</template>
+
 <template name="AddEvent">
   <h2>Add Event</h2>
   {{#with thisVenue}}

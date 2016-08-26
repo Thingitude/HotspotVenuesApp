@@ -77,3 +77,9 @@ FlowRouter.route('/compare/:venueId', {
   }
 });
 
+FlowRouter.route('/compare/:ownersVenueId/:comparingVenueId', {
+    action(params, queryParams) {
+    BlazeLayout.render("mainLayout", {content: "Compare"});
+  }
+})
+
