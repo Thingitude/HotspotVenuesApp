@@ -224,6 +224,7 @@
           <ul class="nav navbar-nav">
             <li><a role="button"  href="/editvenue/{{_id}}">Edit venue</a></li>
             <li><a href="/venueevents/{{_id}}">List events</a></li>
+            <li><a href="/compare/{{_id}}">Compare events</a></li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
             <li><a href="/">Return to venue list</a></li>
@@ -319,21 +320,19 @@
       </div>
     </div>
     <div class="form-group">
-      <label for="eventStartDate" class="col-sm-2 control-label">Start date/time</label>
+      <label for="eventStartDateTime" class="col-sm-2 control-label">Start date/time</label>
       <div class="col-sm-5">
-        <input class="form-control" type="text" name="eventStartDate" value={{startDate}} />
-      </div>
-      <div class="col-sm-5">
-        <input class="form-control" type="text" name="eventStartTime" value={{startTime}} /> <br/>
+        {{#datetimepicker format='DD/MM/YYYY hh:mm A' keepOpen=false viewMode='days'}}
+          <input type="text" id="startDate" name="eventStartDateTime" class="form-control" value="{{startDateTime}}"/>
+        {{/datetimepicker}}
       </div>
     </div>
     <div class="form-group">
-      <label for="eventEndDate" class="col-sm-2 control-label">End date/time</label>
+      <label for="eventEndDateTime" class="col-sm-2 control-label">End date/time</label>
       <div class="col-sm-5">
-        <input class="form-control" type="text" name="eventEndDate" value={{endDate}} />
-      </div>
-      <div class="col-sm-5">
-        <input class="form-control" type="text" name="eventEndTime" value={{endTime}} /> <br/>
+        {{#datetimepicker format='DD/MM/YYYY hh:mm A' keepOpen=false viewMode='days'}}
+          <input type="text" id="startDate" name="eventEndDateTime" class="form-control" value="{{startDateTime}}"/>
+        {{/datetimepicker}}
       </div>
     </div>
     <div class="form-group">
@@ -378,22 +377,54 @@
       </thead>
       <tbody>
         {{#each events}}
-          <tr><td>{{name}}</td><td>{{description}}</td><td>{{startDate}} @ {{startTime}}</td><td>{{endDate}} @ {{endTime}}</td><td>
+          <tr><td>{{name}}</td><td>{{description}}</td><td>{{startDateTime.toDateString}}</td><td>{{endDateTime.toDateString}}</td><td>
             <a type="button" class="btn btn-default" href="/editevent/{{this._id}}">
             <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a>
             <button class="btn btn-default delete" ><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
           </td></tr>
-        {{/each}}
+          {{/each}}
       </tbody>
     </table>
   </div>
   {{/with}}
 </template>
 
+<template name="CompareVenueSelect">
+  {{#with thisVenue}}
+    <h2>Choose a venue to compare with {{name}}</h2>
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="/venue/{{this._id}}">Return to venue</a></li>
+          </ul>
+        </div>
+      </div><!-- /.container-fluid -->
+    </nav>
+  <div class="table-responsive">
+    <table class="table">
+      <thead>
+        <tr><th>Venue</th><th>Description</th><th>Rating</th></tr>
+      </thead>
+      <tbody>
+      {{#each venues}}
+        <tr><td>{{name}}</td><td>{{description}}</td><td>
+        <a type="button" class="btn btn-default" href="venue/{{this._id}}">
+        <span class="glyphicon glyphicon-stats" aria-hidden="true"></span></a>
+        <a type="button" class="btn btn-default" href="/editvenue/{{this._id}}">
+        <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a></td></tr>
+      {{/each}}
+      </tbody>
+
+    </table>
+  </div>
+  {{/with}}
+</template>
 
 <template name="AddEvent">
   <h2>Add Event</h2>
   {{#with thisVenue}}
+  
   <form class="add-event form-horizontal">
     <div class="form-group">
       <label for="eventName" class="col-sm-2 control-label">Event name</label>
@@ -409,20 +440,18 @@
     </div>
     <div class="form-group">
       <label for="eventStartDate" class="col-sm-2 control-label">Start date/time</label>
-      <div class="col-sm-5">
-        <input class="form-control" type="text" name="eventStartDate" placeholder="" />
-      </div>
-      <div class="col-sm-5">
-        <input class="form-control" type="text" name="eventStartTime" placeholder="" /> <br/>
+      <div class="col-sm-10" style="position:relative">  
+        {{#datetimepicker format='DD/MM/YYYY hh:mm A' keepOpen=false viewMode='days'}}
+          <input type="text" id="startDate" name="eventStartDate" class="form-control"/>
+        {{/datetimepicker}}
       </div>
     </div>
     <div class="form-group">
       <label for="eventEndDate" class="col-sm-2 control-label">End date/time</label>
-      <div class="col-sm-5">
-        <input class="form-control" type="text" name="eventEndDate" placeholder="" />
-      </div>
-      <div class="col-sm-5">
-        <input class="form-control" type="text" name="eventEndTime" placeholder="" /> <br/>
+      <div class="col-sm-10" style="positon:relative">
+        {{#datetimepicker format='DD/MM/YYYY hh:mm A' keepOpen=false viewMode='days'}}
+          <input type="text" id="endDate" name="eventEndDate" class="form-control"/>
+        {{/datetimepicker}}
       </div>
     </div>
     <div class="form-group">

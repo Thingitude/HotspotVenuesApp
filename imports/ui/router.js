@@ -70,3 +70,10 @@ FlowRouter.route('/editevent/:eventId', {
     BlazeLayout.render("mainLayout", {content: "EditEvent"});
   }
 });
+
+FlowRouter.route('/compare/:venueId', {
+  action(params, queryParams) {
+    BlazeLayout.render("mainLayout", {content: "CompareVenueSelect"});
+  }
+});
+
