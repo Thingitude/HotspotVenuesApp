@@ -8,6 +8,8 @@ import { ReactiveDict } from 'meteor/reactive-dict';
 import './barchart.js';
 import './event.js';
 import './body.html';
+
+Debug = Venues;
  
 
 Template.body.onCreated(function bodyOnCreated() {
@@ -19,11 +21,19 @@ Template.body.onCreated(function bodyOnCreated() {
 Template.VenueList.helpers({
   venues() {
     //console.log("body.js venuesssummary helper");
+    console.log(Venues.find());
     return Venues.find();
   },
   incompleteCount() {
     return Venues.find().count();
   },
+});
+
+Template.CompareVenueSelect.helpers({
+    venues() {
+    //console.log("body.js venuesssummary helper");
+    return Venues.find();
+  }
 });
 
 
@@ -40,6 +50,26 @@ Template.VenueEventsList.helpers({
     const venueId=FlowRouter.getParam("venueId");
     console.log("venueevents helper");
     return Venues.findOne({"_id": venueId});
+  },
+  dateToStr() {
+    //var start = this.startDateTime;
+    //console.log(startDateTime);
+    //const eventStartDateTime = start.toString();
+    //return eventStartDateTime;
+    return;
+  }
+});
+
+
+Template.CompareVenueSelect.helpers({
+  thisVenue(){
+    const venueId=FlowRouter.getParam("venueId");
+    return Venues.findOne({"_id": venueId});
+  },
+  venues() {
+    //console.log("body.js venuesssummary helper");
+    console.log("venue");
+    return Venues.find();
   },
 });
 
@@ -185,8 +215,10 @@ Template.EditEvent.events({
     const venueId = target.venueId.value;
     const eventName = target.eventName.value;
     const eventDescription = target.eventDescription.value;
-    const eventStartDateTime = target.eventStartDateTime.value;
-    const eventEndDateTime = target.eventEndDateTime.value;    
+    var startDateTimeSTR = target.eventStartDateTime.value;
+    const eventStartDateTime = new Date(startDateTimeSTR);
+    var eventEndDateTimeSTR = target.eventEndDateTime.value; 
+    const eventEndDateTime = new Date(eventEndDateTimeSTR);
 
     Meteor.call('events.update', eventName, eventDescription,
       eventStartDateTime, eventEndDateTime, eventId);

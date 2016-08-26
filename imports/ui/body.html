@@ -199,6 +199,7 @@
           <ul class="nav navbar-nav">
             <li><a role="button"  href="/editvenue/{{_id}}">Edit venue</a></li>
             <li><a href="/venueevents/{{_id}}">List events</a></li>
+            <li><a href="/compare/{{_id}}">Compare events</a></li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
             <li><a href="/">Return to venue list</a></li>
@@ -311,18 +312,49 @@
       </thead>
       <tbody>
         {{#each events}}
-          <tr><td>{{name}}</td><td>{{description}}</td><td>{{startDateTime}}</td><td>{{endDateTime}}</td><td>
+          <tr><td>{{name}}</td><td>{{description}}</td><td>{{startDateTime.toDateString}}</td><td>{{endDateTime.toDateString}}</td><td>
             <a type="button" class="btn btn-default" href="/editevent/{{this._id}}">
             <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a>
             <button class="btn btn-default delete" ><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
           </td></tr>
-        {{/each}}
+          {{/each}}
       </tbody>
     </table>
   </div>
   {{/with}}
 </template>
 
+<template name="CompareVenueSelect">
+  {{#with thisVenue}}
+    <h2>Choose a venue to compare with {{name}}</h2>
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="/venue/{{this._id}}">Return to venue</a></li>
+          </ul>
+        </div>
+      </div><!-- /.container-fluid -->
+    </nav>
+  <div class="table-responsive">
+    <table class="table">
+      <thead>
+        <tr><th>Venue</th><th>Description</th><th>Rating</th></tr>
+      </thead>
+      <tbody>
+      {{#each venues}}
+        <tr><td>{{name}}</td><td>{{description}}</td><td>
+        <a type="button" class="btn btn-default" href="venue/{{this._id}}">
+        <span class="glyphicon glyphicon-stats" aria-hidden="true"></span></a>
+        <a type="button" class="btn btn-default" href="/editvenue/{{this._id}}">
+        <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a></td></tr>
+      {{/each}}
+      </tbody>
+
+    </table>
+  </div>
+  {{/with}}
+</template>
 
 <template name="AddEvent">
   <h2>Add Event</h2>

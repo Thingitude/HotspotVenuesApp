@@ -3,7 +3,8 @@ import { Mongo } from 'meteor/mongo';
 import { check } from 'meteor/check';
  
 export const Venues = new Mongo.Collection('venues');
- 
+export const AllVenues = new Mongo.Collection('venues');
+
 if (Meteor.isServer) {
   // This code only runs on the server
   // Only publish venues that belong to the current user
