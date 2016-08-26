@@ -7,6 +7,7 @@ import { SensorData } from '../api/barchart.js';
 import { ReactiveDict } from 'meteor/reactive-dict';
  
 import './body.html';
+import './router.js';
 
 // We use the Highcharts add-in for Meteor for the barcharts
 var Highcharts= require('highcharts/highstock');
@@ -48,6 +49,13 @@ Template.VenueD.onCreated(function VenueOnCreated() {
   Meteor.subscribe('dailyAggregates');
   Meteor.subscribe('sensorData');
 });
+
+Template.CompareD.onCreated(function CompareOnCreated(){
+  this.state = new ReactiveDict();
+  console.log("compare created");
+  Meteor.subscribe('dailyAggregates');
+  Meteor.subscribe('sensorData');
+})
 
 Template.VenueW.onCreated(function VenueOnCreated() {
   this.state = new ReactiveDict();
@@ -96,6 +104,105 @@ Template.VenueD.helpers({
     //console.log(peopleDates);
 
     // Use Meteor.defer() to create chart after DOM is ready:
+    Meteor.defer(function() {
+      Highcharts.chart('chart', {
+          title: {
+              text: 'People in venue on ' + today.toDateString()
+          },
+          subtitle: {
+              text: "Provided by Reading Hotspot"
+          },
+          xAxis: {
+              categories: peopleDates,
+              crosshair: true
+          },
+          yAxis: {
+              min: 0,
+              title: {
+                  text: 'People in venue'
+              }
+          },
+          tooltip: {
+              headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+              pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                  '<td style="padding:0"><b>{point.y:.0f}</b></td></tr>',
+              footerFormat: '</table>',
+              shared: true,
+              useHTML: true
+          },
+          plotOptions: {
+              column: {
+                  pointPadding: 0.2,
+                  borderWidth: 0
+              }
+          },
+          series: peopleSeries
+      });
+    });
+  },
+});
+
+function ownerVenue() {
+  const venueId=FlowRouter.getParam("ownersVenueId");
+  console.log(venueId);
+  return Venues.findOne({"_id": venueId});
+}
+function compareVenue(){
+  const venueId=FlowRouter.getParam("comparingVenueId");
+  console.log(venueId);
+  return Venues.findOne({"_id": venueId});
+}
+
+Template.CompareD.helpers({
+  ownerVenue() {
+  const venueId=FlowRouter.getParam("ownersVenueId");
+  console.log(venueId);
+  return Venues.findOne({"_id": venueId});
+},
+compareVenue(){
+  const venueId=FlowRouter.getParam("comparingVenueId");
+  console.log(venueId);
+  return Venues.findOne({"_id": venueId});
+},
+  barChartDaily () {
+    console.log("Test");                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
+    var owner = ownerVenue();
+    var compare = compareVenue; 
+    console.log(owner);
+    console.log("Test");
+    var peopleSeries=[{type: "column", name: ownerVenue().name, data:[]},
+                      {type: "column", name: compareVenue().name, data:[]}];
+    console.log("after people series");
+
+    var peopleDates=[];
+
+    var today= new Date();
+    var todayStart=new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    var aDay= 1000 * 60 * 60 *24;
+    console.log("test");
+    var yesterday = new Date(today - aDay);
+    console.log(today, yesterday);
+    var thisVenueSeries=SensorData.find({"sensorId": this.sensorId, "timestamp": {$gte: todayStart }});
+    console.log(compareVenue().sensorId);
+    var thisCompareSeries=SensorData.find({"sensorId": compareVenue().sensorId, "timestamp": {$gte: todayStart }});
+    console.log("Pre for loop");
+    thisVenueSeries.forEach(function(doc) {
+
+      peopleSeries[0].data.push(doc.people);
+      peopleDates.push(doc.timestamp.toLocaleTimeString());   
+    });
+    thisCompareSeries.forEach(function(doc){
+      peopleSeries[1].data.push(doc.people);
+      peopleDates.push(doc.timestamp.toLocaleTimeString());
+    });
+
+    console.log(peopleSeries[0]);
+    console.log(peopleSeries[1]);
+
+    //console.log(peopleSeries);
+    //console.log(peopleDates);
+    // Use Meteor.defer() to create chart after DOM is ready:
+    console.log("Point 2");
     Meteor.defer(function() {
       Highcharts.chart('chart', {
           title: {

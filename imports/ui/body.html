@@ -404,7 +404,7 @@
       <div class="container-fluid">
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="/venue/{{this._id}}">Return to venue</a></li>
+            <li><a href="/venue/{{thisVenue}}">Return to venue</a></li>
           </ul>
         </div>
       </div><!-- /.container-fluid -->
@@ -417,7 +417,7 @@
       <tbody>
       {{#each venues}}
         <tr><td>{{name}}</td><td>{{description}}</td><td>Ratings go here</td><td>
-          <a href="/compare/{{thisVenue}}/{{_id}}">Compare</a>
+          <a href="/compare/{{thisVenue}}/{{this._id}}">Compare</a>
         </td></tr>
       {{/each}}
       </tbody>
@@ -450,9 +450,54 @@
         </tbody>
       </table>
     </div>
+    <label>Graphs</label>
+    {{>CompareD}}
   {{/with}}
   {{/with}}
 </template>
+
+<template name="CompareNavBar">
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+        </div>
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <ul class=" nav navbar-nav">
+            <li class="dropdown">
+              <a href="#" role="button" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Time frame<span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li><a href="/venue/{{_id}}">Today</a></li>
+                <li><a href="/venue/{{_id}}/w">This week</a></li>
+                <li><a href="/venue/{{_id}}/m">This month</a></li>
+                <li><a href="/venue/{{_id}}/x">Custom dates</a></li>
+              </ul>
+            </li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="/">Return to venue list</a></li>
+          </ul>
+        </div>
+      </div><!-- /.container-fluid -->
+    </nav>
+</template>
+
+<template name="CompareD">
+  {{#with ownerVenue}}
+  {{#with compareVenue}}
+    {{>CompareNavBar}}
+    <div id="chart">
+      {{barChartDaily}}
+    </div>
+  {{/with}}
+  {{/with}}
+</template>
+
 
 <template name="AddEvent">
   <h2>Add Event</h2>

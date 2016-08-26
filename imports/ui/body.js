@@ -55,18 +55,18 @@ Template.VenueEventsList.helpers({
 Template.Compare.helpers({
   OwnerVenue(){
     const venueId=FlowRouter.getParam("ownersVenueId");
-    console.log(venueId);
+    //console.log(venueId);
     //console.log(Venues.find(_id: venueId));
     const venue = Venues.findOne({_id: venueId});
-    console.log(Venues.findOne({_id: venueId}));
+    //console.log(Venues.findOne({_id: venueId}));
     return venue;
   },
   CompareVenue(){
   const venueId=FlowRouter.getParam("comparingVenueId");
-  console.log(venueId);
+  //console.log(venueId);
   //console.log(Venues.find(_id: venueId));
   const venue = Venues.findOne({_id: venueId});
-  console.log(Venues.findOne({_id: venueId}));
+  //console.log(Venues.findOne({_id: venueId}));
   return venue;
   }
 });
@@ -79,7 +79,7 @@ Template.CompareVenueSelect.helpers({
   },
   venues() {
     //console.log("body.js venuesssummary helper");
-    console.log("venue");
+    //console.log("venue");
     return Venues.find({owner: {$ne : Meteor.userId()}});
   },
 });
