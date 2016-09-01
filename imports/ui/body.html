@@ -1,17 +1,20 @@
 <template name="mainLayout">
   <body>
-    <div class="container-fluid">
+    <div class="container">
       <header>
-        <h1>Hotspot venues {{incompleteCount}}</h1>
-   
-        {{> loginButtons}}
-   
+        <div>
+          <img src="/hotspot_250.png" />
+          <img class="pull-right" src="/ryoc2016_150.png" />
+          <div class="col-sm-offset-4">
+            {{> loginButtons}}
+          </div>
+        </div>
       </header>
       <main>
         {{#if currentUser}}
           {{>Template.dynamic template=content}}
         {{else}}
-          <p>Please sign in or create an account</p>
+          <p class="col-sm-offset-4">Please sign in or create an account</p>
         {{/if}}
       </main>
     </div>
