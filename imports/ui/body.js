@@ -174,8 +174,8 @@ Template.AddEvent.events({
     const target = event.target;
     const eventName = target.eventName.value;
     const eventDescription = target.eventDescription.value;
-    const eventStartDateTime = target.eventStartDate.value;
-    const eventEndDateTime = target.eventEndDate.value;
+    const eventStartDateTime = new Date(target.eventStartDate.value);
+    const eventEndDateTime = new Date(target.eventEndDate.value);
 
     console.log("Adding events");
     
