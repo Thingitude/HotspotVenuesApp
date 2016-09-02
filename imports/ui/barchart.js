@@ -55,7 +55,28 @@ Template.CompareD.onCreated(function CompareOnCreated(){
   console.log("compare created");
   Meteor.subscribe('dailyAggregates');
   Meteor.subscribe('sensorData');
-})
+});
+
+Template.CompareW.onCreated(function CompareOnCreated(){
+  this.state = new ReactiveDict();
+  console.log("compare created");
+  Meteor.subscribe('dailyAggregates');
+  Meteor.subscribe('sensorData');
+});
+
+Template.CompareM.onCreated(function CompareOnCreated(){
+  this.state = new ReactiveDict();
+  console.log("compare created");
+  Meteor.subscribe('dailyAggregates');
+  Meteor.subscribe('sensorData');
+});
+
+Template.CompareX.onCreated(function CompareOnCreated(){
+  this.state = new ReactiveDict();
+  console.log("compare created");
+  Meteor.subscribe('dailyAggregates');
+  Meteor.subscribe('sensorData');
+});
 
 Template.VenueW.onCreated(function VenueOnCreated() {
   this.state = new ReactiveDict();
@@ -159,7 +180,7 @@ Template.CompareD.helpers({
   console.log(venueId);
   return Venues.findOne({"_id": venueId});
 },
-compareVenue(){
+  compareVenue(){
   const venueId=FlowRouter.getParam("comparingVenueId");
   console.log(venueId);
   return Venues.findOne({"_id": venueId});
@@ -203,6 +224,116 @@ compareVenue(){
     //console.log(peopleDates);
     // Use Meteor.defer() to create chart after DOM is ready:
     console.log("Point 2");
+    Meteor.defer(function() {
+      Highcharts.chart('chart', {
+          title: {
+              text: 'People in venue on ' + today.toDateString()
+          },
+          subtitle: {
+              text: "Provided by Reading Hotspot"
+          },
+          xAxis: {
+              categories: peopleDates,
+              crosshair: true
+          },
+          yAxis: {
+              min: 0,
+              title: {
+                  text: 'People in venue'
+              }
+          },
+          tooltip: {
+              headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+              pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                  '<td style="padding:0"><b>{point.y:.0f}</b></td></tr>',
+              footerFormat: '</table>',
+              shared: true,
+              useHTML: true
+          },
+          plotOptions: {
+              column: {
+                  pointPadding: 0.2,
+                  borderWidth: 0
+              }
+          },
+          series: peopleSeries
+      });
+    });
+  },
+});
+
+Template.CompareW.helpers({
+  ownerVenue() {
+  const venueId=FlowRouter.getParam("ownersVenueId");
+  console.log(venueId);
+  return Venues.findOne({"_id": venueId});
+},
+compareVenue(){
+  const venueId=FlowRouter.getParam("comparingVenueId");
+  console.log(venueId);
+  return Venues.findOne({"_id": venueId});
+},
+  barChartWeekly () {
+    console.log("Test");                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
+    var owner = ownerVenue();
+    var compare = compareVenue; 
+    console.log(owner);
+    console.log("Test");
+    var peopleSeries=[{type: "column", name: ownerVenue().name, data:[]},
+                      {type: "column", name: compareVenue().name, data:[]}];
+    console.log("after people series");
+
+    var peopleDates=[];
+
+    var today= new Date();
+    var dayOfYear=dateToDay(today);
+    var dayOfWeek=today.getDay();
+    var startOfWeek=dayOfYear-dayOfWeek;
+
+    if(Meteor.isClient)
+    {
+
+    console.log("time: ", startOfWeek); 
+
+    var aDay= 1000 * 60 * 60 *24;
+    var lastWeek = new Date(today - (aDay*dayOfWeek));
+
+    console.log(lastWeek);
+
+    console.log(this.sensorId);
+
+      var thisVenueSeries=DailyAggregates.find({"sensorId": this.sensorId, "dayOfYear": {$gte: startOfWeek }}).fetch();
+      console.log(thisVenueSeries);
+      console.log("test");
+
+    console.log("id", compareVenue().sensorId)
+      var thisCompareSeries=DailyAggregates.find({"sensorId": compareVenue().sensorId, "dayOfYear": {$gte: startOfWeek }}).fetch();
+      console.log("test2");
+        
+    console.log("Pre for loop");
+    thisVenueSeries.forEach(function(doc) {
+      console.log("in loop");
+      peopleSeries[0].data.push(doc.avgPeople);
+      console.log(peopleSeries[0]);
+      peopleDates.push(doc.dayOfMonth);   
+    });
+    console.log("in between");
+    thisCompareSeries.forEach(function(doc){
+      console.log("in loop 2");
+      peopleSeries[1].data.push(doc.avgPeople);
+      console.log(peopleSeries[1]);
+      peopleDates.push(doc.dayOfMonth);
+    });
+
+    console.log("Series: ");
+    console.log(peopleSeries[0]);
+    console.log(peopleSeries[1]);
+
+    //console.log(peopleSeries);
+    //console.log(peopleDates);
+    // Use Meteor.defer() to create chart after DOM is ready:
+    console.log("Point 2");
+  }
     Meteor.defer(function() {
       Highcharts.chart('chart', {
           title: {
@@ -314,6 +445,108 @@ Template.VenueW.helpers({
 	}
 });
 
+Template.CompareM.helpers({
+  ownerVenue() {
+  const venueId=FlowRouter.getParam("ownersVenueId");
+  console.log(venueId);
+  return Venues.findOne({"_id": venueId});
+},
+compareVenue(){
+  const venueId=FlowRouter.getParam("comparingVenueId");
+  console.log(venueId);
+  return Venues.findOne({"_id": venueId});
+},
+  barChartMonthly () {
+    console.log("Test");                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
+    var owner = ownerVenue();
+    var compare = compareVenue; 
+    console.log(owner);
+    console.log("Test");
+    var peopleSeries=[{type: "column", name: ownerVenue().name, data:[]},
+                      {type: "column", name: compareVenue().name, data:[]}];
+    console.log("after people series");
+
+    var peopleDates=[];
+
+      var today= new Date();
+      var dayOfYear=dateToDay(today);
+      var dayOfMonth=today.getDate();
+      var startOfMonth=dayOfYear-dayOfMonth;
+      var monthStartDate=new Date(today.getFullYear(),today.getMonth(),1);
+
+    console.log("time: ", startOfMonth); 
+
+    console.log(this.sensorId);
+
+      var thisVenueSeries=DailyAggregates.find({"sensorId": this.sensorId, "dayOfYear": {$gte: startOfMonth }}).fetch();
+      console.log(thisVenueSeries);
+      console.log("test");
+
+    console.log("id", compareVenue().sensorId)
+      var thisCompareSeries=DailyAggregates.find({"sensorId": compareVenue().sensorId, "dayOfYear": {$gte: startOfMonth }}).fetch();
+      console.log("test2");
+        
+    console.log("Pre for loop");
+    thisVenueSeries.forEach(function(doc) {
+      console.log("in loop");
+      peopleSeries[0].data.push(doc.avgPeople);
+      console.log(peopleSeries[0]);
+      peopleDates.push(doc.dayOfMonth);   
+    });
+    console.log("in between");
+    thisCompareSeries.forEach(function(doc){
+      console.log("in loop 2");
+      peopleSeries[1].data.push(doc.avgPeople);
+      console.log(peopleSeries[1]);
+      peopleDates.push(doc.dayOfMonth);
+    });
+
+    console.log("Series: ");
+    console.log(peopleSeries[0]);
+    console.log(peopleSeries[1]);
+
+    //console.log(peopleSeries);
+    //console.log(peopleDates);
+    // Use Meteor.defer() to create chart after DOM is ready:
+    console.log("Point 2");
+    Meteor.defer(function() {
+      Highcharts.chart('chart', {
+          title: {
+              text: 'People in venue on ' + today.toDateString()
+          },
+          subtitle: {
+              text: "Provided by Reading Hotspot"
+          },
+          xAxis: {
+              categories: peopleDates,
+              crosshair: true
+          },
+          yAxis: {
+              min: 0,
+              title: {
+                  text: 'People in venue'
+              }
+          },
+          tooltip: {
+              headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+              pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                  '<td style="padding:0"><b>{point.y:.0f}</b></td></tr>',
+              footerFormat: '</table>',
+              shared: true,
+              useHTML: true
+          },
+          plotOptions: {
+              column: {
+                  pointPadding: 0.2,
+                  borderWidth: 0
+              }
+          },
+          series: peopleSeries
+      });
+    });
+  },
+});
+
 Template.VenueM.helpers({
   thisVenue() {
       const venueId=FlowRouter.getParam("venueId");
@@ -392,6 +625,7 @@ Template.VenueX.helpers({
   },
   thisStartDate() {
     var startDate = FlowRouter.getQueryParam("start");
+    console.log("start " + startDate);
     if(startDate==null) {
       var today= new Date();
       var thisYear=today.getFullYear();
@@ -403,6 +637,7 @@ Template.VenueX.helpers({
   },
   thisEndDate() {
     var endDate = FlowRouter.getQueryParam("end");
+    console.log("end " + endDate);
     if(endDate==null) {
       var today= new Date();
       var thisYear=today.getFullYear();
@@ -415,9 +650,11 @@ Template.VenueX.helpers({
 
   barChartCustom: function () {
     var i=0;
+
     var peopleSeries=[{type: "column", name: "totalPeople", data:[]},
                       {type: "column", name: "avgPeople", data:[]},
                       {type: "column", name: "maxPeople", data:[]}];
+
     var peopleDates=[];
 
     var chartStartDate=FlowRouter.getQueryParam("start");
@@ -505,7 +742,7 @@ Template.VenueX.helpers({
 });
 
 Template.VenueX.events({
-  'submit .set-date-range'(event) {
+  'submit .submitDates'(event) {
     var today= new Date();
     var thisYear=today.getFullYear();
     var thisMonth=today.getMonth();
@@ -536,5 +773,175 @@ Template.VenueX.events({
     console.log("Dates are ", startDate, " and ", endDate);
     //conole.log("Force break");
     window.location.assign("/venue/"+FlowRouter.getParam("venueId")+"/x?start="+startDate+"&end="+endDate);
+  }
+});
+
+Template.CompareX.helpers({
+  ownerVenue() {
+  const venueId=FlowRouter.getParam("ownersVenueId");
+  console.log(venueId);
+  return Venues.findOne({"_id": venueId});
+},
+compareVenue(){
+  const venueId=FlowRouter.getParam("comparingVenueId");
+  console.log(venueId);
+  return Venues.findOne({"_id": venueId});
+},
+  thisStartDate() {
+    var startDate = FlowRouter.getQueryParam("start");
+    console.log(startDate);
+    if(startDate==null) {
+      var today= new Date();
+      var thisYear=today.getFullYear();
+      var thisMonth=today.getMonth();
+      var dayOfMonth=today.getDate();
+      startDate=thisYear+'-'+thisMonth+'-'+dayOfMonth; 
+    }
+    return startDate;
+  },
+  thisEndDate() {
+    var endDate = FlowRouter.getQueryParam("end");
+    console.log("end " + endDate);
+    if(endDate==null) {
+      var today= new Date();
+      var thisYear=today.getFullYear();
+      var thisMonth=today.getMonth()+1;
+      var dayOfMonth=today.getDate();
+      endDate=thisYear+'-'+thisMonth+'-'+dayOfMonth; 
+    }
+    return endDate;
+  },
+
+  barChartCustomCompare: function () {
+    var i=0;
+
+
+    var peopleSeries=[{type: "column", name: ownerVenue().name, data:[]},
+                      {type: "column", name: compareVenue().name, data:[]}];
+    var peopleDates=[];
+
+    var chartStartDate=FlowRouter.getQueryParam("start");
+    var chartEndDate=FlowRouter.getQueryParam("end");
+
+    var today= new Date();
+    var dayOfYear=dateToDay(today);
+    var dayOfMonth=today.getDate();
+    var startOfMonth=dayOfYear-dayOfMonth;
+    var monthStartDate=new Date(today.getFullYear(),today.getMonth(),1);
+
+    if(chartStartDate== null) {
+      console.log("No start date specified");
+      chartStartDate=monthStartDate;
+    } else {
+      chartStartDate=new Date(chartStartDate);
+    };
+    if(chartEndDate== null) {
+      console.log("No end date specified");
+      chartEndDate=today;
+    } else {
+      chartEndDate=new Date(chartEndDate);
+    };
+
+    var startYear=chartStartDate.getFullYear();
+    var startDayOfYear=dateToDay(chartStartDate);
+    var startMonth=chartStartDate.getMonth();
+    var startDayOfMonth=chartStartDate.getDate();
+    var endYear=chartEndDate.getFullYear();
+    var endDayOfYear=dateToDay(chartEndDate);
+    var sensorId=this.sensorId;
+
+    console.log("Start - ",chartStartDate, " and End - ", chartEndDate);
+    console.log("Sensor: ", sensorId);
+
+    var thisVenueSeries=DailyAggregates.find({"sensorId": this.sensorId, "date": {$gte: chartStartDate, $lt: chartEndDate} }).fetch();
+    var thisCompareSeries=DailyAggregates.find({"sensorId": compareVenue().sensorId, "date": {$gte: chartStartDate, $lt: chartEndDate} }).fetch();
+    
+    console.log(thisVenueSeries);
+    console.log(thisCompareSeries);
+
+    thisVenueSeries.forEach(function(doc) {
+      peopleSeries[0].data.push(doc.avgPeople);
+      peopleDates.push(doc.dayOfMonth);
+    });
+    thisCompareSeries.forEach(function(doc){
+      peopleSeries[1].data.push(doc.avgPeople);  
+    });
+    console.log(peopleSeries);
+
+    console.log(peopleDates);
+    
+    // Use Meteor.defer() to create chart after DOM is ready:
+    Meteor.defer(function() {
+      Highcharts.chart('chart', {
+        title: {
+          text: 'People in venue from ' + chartStartDate.toDateString() + ' to ' + chartEndDate.toDateString()
+        },
+        subtitle: {
+          text: "Provided by Reading Hotspot"
+        },
+        xAxis: {
+          categories: peopleDates,
+          crosshair: true
+        },
+        yAxis: {
+          min: 0,
+          title: {
+              text: 'People in venue'
+          }
+        },
+        tooltip: {
+          headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+          pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+              '<td style="padding:0"><b>{point.y:.0f}</b></td></tr>',
+          footerFormat: '</table>',
+          shared: true,
+          useHTML: true
+        },
+        plotOptions: {
+          column: {
+            pointPadding: 0.2,
+            borderWidth: 0
+          }
+        },
+        series: peopleSeries
+      });
+    });
+  },
+});
+
+Template.CompareX.events({
+  'submit .set-date-range'(event) {
+    var today= new Date();
+    var thisYear=today.getFullYear();
+    var thisMonth=today.getMonth();
+    var dayOfMonth=today.getDate();
+
+    console.log("button clicked");
+    
+    //prevent the browser from submitting
+    event.preventDefault();
+
+    //get values from form
+    const target = event.target;
+    var startDate = target.startDate.value;
+    var endDate = target.endDate.value;
+    if(startDate=='') {
+      if(thisMonth <10) {
+        thisMonth='0'+thisMonth;
+      }
+      startDate=thisYear+'-'+thisMonth+'-'+dayOfMonth; 
+    }    
+    if(endDate=='') {
+      thisMonth++;
+      if(thisMonth <10) {
+        thisMonth='0'+thisMonth;
+      }
+      endDate=thisYear+'-'+thisMonth+'-'+dayOfMonth; 
+    }    
+
+    //barChartCustom(startDate, endDate);
+    console.log("Dates are ", startDate, " and ", endDate);
+    //conole.log("Force break");
+    window.location.assign("/compare/"+FlowRouter.getParam("ownersVenueId")+"/"+FlowRouter.getParam("comparingVenueId")+"/x?start="+startDate+"&end="+endDate);
   }
 });

@@ -52,7 +52,7 @@ Template.VenueEventsList.helpers({
   }
 });
 
-Template.Compare.helpers({
+Template.compareTemplate.helpers({
   OwnerVenue(){
     const venueId=FlowRouter.getParam("ownersVenueId");
     //console.log(venueId);
@@ -239,6 +239,25 @@ Template.EditEvent.events({
       eventStartDateTime, eventEndDateTime, eventId);
 
     window.location.assign("/venueevents/" + venueId);
+  },
+});
+
+Template.CompareNavBar.helpers({
+  OwnerVenue(){
+    const venueId=FlowRouter.getParam("ownersVenueId");
+    //console.log(venueId);
+    //console.log(Venues.find(_id: venueId));
+    const venue = Venues.findOne({_id: venueId});
+    //console.log(Venues.findOne({_id: venueId}));
+    return venue;
+  },
+  CompareVenue(){
+  const venueId=FlowRouter.getParam("comparingVenueId");
+  //console.log(venueId);
+  //console.log(Venues.find(_id: venueId));
+  const venue = Venues.findOne({_id: venueId});
+  //console.log(Venues.findOne({_id: venueId}));
+  return venue;
   },
 });
 

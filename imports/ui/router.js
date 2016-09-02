@@ -79,7 +79,25 @@ FlowRouter.route('/compare/:venueId', {
 
 FlowRouter.route('/compare/:ownersVenueId/:comparingVenueId', {
     action(params, queryParams) {
-    BlazeLayout.render("mainLayout", {content: "Compare"});
+    BlazeLayout.render("mainLayout", {content: "CompareCallerD"});
   }
-})
+});
+
+FlowRouter.route('/compare/:ownersVenueId/:comparingVenueId/w', {
+    action(params, queryParams) {
+    BlazeLayout.render("mainLayout", {content: "CompareCallerW"});
+  }
+});
+
+FlowRouter.route('/compare/:ownersVenueId/:comparingVenueId/m', {
+    action(params, queryParams) {
+    BlazeLayout.render("mainLayout", {content: "CompareCallerM"});
+  }
+});
+
+FlowRouter.route('/compare/:ownersVenueId/:comparingVenueId/x', {
+    action(params, queryParams) {
+    BlazeLayout.render("mainLayout", {content: "CompareCallerX"});
+  }
+});
 
