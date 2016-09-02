@@ -211,6 +211,15 @@
 {{/with}}
 </template>
 
+<template name="Export">
+  {{#with thisVenue}}
+    <h2>Export {{this.name}}</h2>
+  {{/with}}
+  {{#each thisPayload}}
+    Test<hr>
+  {{/each}}
+</template>
+
 <template name="VenueNavBar">
     <nav class="navbar navbar-default">
       <div class="container-fluid">
@@ -237,6 +246,7 @@
           <ul class="nav navbar-nav">
             <li><a role="button"  href="/editvenue/{{_id}}">Edit venue</a></li>
             <li><a href="/venueevents/{{_id}}">List events</a></li>
+            <li><a href="/export/{{_id}}">Export</a></li>
             <li><a href="/compare/{{_id}}">Compare venues</a></li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
@@ -247,6 +257,45 @@
     </nav>
 </template>
 
+<template name="ReviewsD">
+  Reviews for today<br><hr>
+  {{#each thisReview}}
+    {{> starsRating id='rating2' rating=this.score size=20}}<br>
+    <h4>Details: </h4><br>
+    <h5>"{{this.details}}"</h5>
+    <hr>
+  {{/each}}
+</template>
+
+<template name="ReviewsW">
+  Reviews for this week
+    {{#each thisReview}}
+    {{> starsRating id='rating2' rating=this.score size=20}}<br>
+    <h4>Details: </h4><br>
+    <h5>"{{this.details}}"</h5>
+    <hr>
+  {{/each}}
+</template>
+
+<template name="ReviewsM">
+  Reviews for this month
+    {{#each thisReview}}
+    {{> starsRating id='rating2' rating=this.score size=20}}<br>
+    <h4>Details: </h4><br>
+    <h5>"{{this.details}}"</h5>
+    <hr>
+  {{/each}}
+</template>
+
+<template name="ReviewsX">
+  Custom review time
+    {{#each thisReview}}
+    {{> starsRating id='rating2' rating=this.score size=20}}<br>
+    <h4>Details: </h4><br>
+    <h5>"{{this.details}}"</h5>
+    <hr>
+  {{/each}}
+</template>
 
 <template name="VenueD">
   {{#with thisVenue}}
@@ -256,6 +305,7 @@
     <div id="chart">
       {{barChartDaily}}
     </div>
+    {{>ReviewsD}}
   {{/with}}
 </template>
 
@@ -268,6 +318,7 @@
     <div id="chart">
       {{barChartWeek}}
     </div>
+    {{>ReviewsW}}
   {{/with}}
 </template>
 
@@ -279,6 +330,7 @@
     <div id="chart">
       {{barChartMonth}}
     </div>
+    {{>ReviewsM}}
   {{/with}}
 </template>
 
@@ -312,6 +364,7 @@
     <div id="chart">
       {{barChartCustom}}
     </div>
+    {{>ReviewsX}}
   {{/with}}
 </template>
 

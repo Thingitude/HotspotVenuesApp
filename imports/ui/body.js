@@ -4,6 +4,7 @@ import { Template } from 'meteor/templating';
 
 import { Venues } from '../api/venues.js';
 import { Events } from '../api/events.js';
+import { SensorData } from '../api/barchart.js';
 import { Reviews } from '../api/reviews.js';
 import { ReactiveDict } from 'meteor/reactive-dict';
  
@@ -18,6 +19,7 @@ Template.body.onCreated(function bodyOnCreated() {
   Meteor.subscribe('venues');
   Meteor.subscribe('events');
   Meteor.subscribe('reviews');
+  Meteor.subscribe('SensorData');
 });
 
 Template.VenueList.helpers({
@@ -46,6 +48,85 @@ Template.VenueList.helpers({
   incompleteCount() {
     return Venues.find({owner: Meteor.userId()}).count();
   },
+});
+
+Template.Export.helpers({
+  thisVenue(){
+    const venueId = FlowRouter.getParam('venueId');
+    return Venues.findOne({"_id": venueId});
+  },
+  thisReview(){
+    const venueId = FlowRouter.getParam('venueId');
+    return Reviews.find({"venueId": venueId});
+  },
+  thisPayload(){
+    if(Meteor.isClient)
+    {
+      const venueId = FlowRouter.getParam('venueId');
+      var venues = Venues.find({"venueId": venueId}).fetch();
+      console.log(venues);
+      var sensorId = venues[0].sensorId;
+      console.log(sensorId);
+      console.log(SensorData.find({"sensorId": sensorId}).fetch());
+      return SensorData.find({"venueId": venueId}).fetch();
+    }
+  },
+});
+
+Template.ReviewsD.helpers({
+  thisReview(){
+    const venueId = FlowRouter.getParam('venueId');
+    console.log("Day");
+    var today= new Date();
+    var todayStart=new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    var reviewData = Reviews.find({"venueId" : venueId, "timestamp": { $gte: todayStart }}).fetch();
+    var theAnnoyingOne = Reviews.find({"_id" : "N4rfzLiozduHQBkuD"}).fetch();
+    var annoyingDate = theAnnoyingOne.timestamp;
+    console.log(annoyingDate);
+    console.log(todayStart + "<" + new Date());
+    return reviewData;
+  }
+});
+
+Template.ReviewsW.helpers({
+  thisReview(){
+    const venueId = FlowRouter.getParam('venueId');
+    console.log("Week");
+    var today= new Date();
+    console.log(today.getTime());
+    weeknum = today.getTime() - 604800000; //milliseconds in a week
+    console.log(weeknum);
+    weekAgo = new Date(weeknum);
+    console.log(weekAgo);
+    var reviewData = Reviews.find({"venueId" : venueId, "timestamp": {$gte: weekAgo }}).fetch();
+    console.log(reviewData);
+    return reviewData;
+  }
+});
+
+Template.ReviewsM.helpers({
+  thisReview(){
+    const venueId = FlowRouter.getParam('venueId');
+    console.log("Month");
+    var today= new Date();
+    console.log(today.getTime());
+    weeknum = today.getTime() - 2628000000 ; //milliseconds in a week
+    console.log(weeknum);
+    weekAgo = new Date(weeknum);
+    console.log(weekAgo);
+    var reviewData = Reviews.find({"venueId" : venueId, "timestamp": {$gte: weekAgo }}).fetch();
+    return reviewData;
+  }
+});
+
+Template.ReviewsX.helpers({
+  thisReview(){
+    const venueId = FlowRouter.getParam('venueId');
+    var today= new Date();
+    var todayStart=new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    var reviewData = Reviews.find({"venueId" : venueId, "timestamp": {$gte: todayStart }}).fetch();
+    return reviewData;
+  }
 });
 
 Template.VenueEventsList.helpers({

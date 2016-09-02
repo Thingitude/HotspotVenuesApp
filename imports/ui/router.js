@@ -101,3 +101,8 @@ FlowRouter.route('/compare/:ownersVenueId/:comparingVenueId/x', {
   }
 });
 
+FlowRouter.route('/export/:venueId', {
+    action(params, queryParams) {
+    BlazeLayout.render("mainLayout", {content: "Export"});
+  }
+});
