@@ -4,6 +4,7 @@ import { Template } from 'meteor/templating';
 
 import { Venues } from '../api/venues.js';
 import { Events } from '../api/events.js';
+import { Reviews } from '../api/reviews.js';
 import { ReactiveDict } from 'meteor/reactive-dict';
  
 import './barchart.js';
@@ -16,9 +17,27 @@ Template.body.onCreated(function bodyOnCreated() {
   this.state = new ReactiveDict();
   Meteor.subscribe('venues');
   Meteor.subscribe('events');
+  Meteor.subscribe('reviews');
 });
 
 Template.VenueList.helpers({
+  thisReview(){
+    const venueId = this._id;
+    var reviewData = Reviews.find({"venueId" : venueId}).fetch();
+    console.log(reviewData);
+    var score = 0;
+    for(var i = 0; i < reviewData.length; i++){
+      score += reviewData[i].score;
+    }
+    score = score / reviewData.length;
+    console.log(score);
+    if(isNaN(score))
+    {
+      score = 0.1;
+    }
+    var obj = {avg : score};
+    return obj;
+  },
   venues() {
     //console.log("body.js venuesssummary helper");
     //console.log(Venues.find({"owner": this.userId}));
@@ -71,8 +90,24 @@ Template.compareTemplate.helpers({
   }
 });
 
-
 Template.CompareVenueSelect.helpers({
+  thisReview(){
+    const venueId = this._id;
+    var reviewData = Reviews.find({"venueId" : venueId}).fetch();
+    console.log(reviewData);
+    var score = 0;
+    for(var i = 0; i < reviewData.length; i++){
+      score += reviewData[i].score;
+    }
+    score = score / reviewData.length;
+    console.log(score);
+    if(isNaN(score))
+    {
+      score = 0.1;
+    }
+    var obj = {avg : score};
+    return obj;
+  },
   thisVenue(){
     const venueId=FlowRouter.getParam("venueId");
     return venueId;
@@ -82,6 +117,7 @@ Template.CompareVenueSelect.helpers({
     //console.log("venue");
     return Venues.find({owner: {$ne : Meteor.userId()}});
   },
+
 });
 
 /*Template.Event.helpers({
