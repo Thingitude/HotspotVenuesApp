@@ -9,6 +9,9 @@ import { Reviews } from '../api/reviews.js';
 import { ReactiveDict } from 'meteor/reactive-dict';
  
 import './barchart.js';
+import './compare.js';
+import './reviews.js';
+import './export.js';
 import './event.js';
 import './body.html';
 
@@ -50,164 +53,6 @@ Template.VenueList.helpers({
   },
 });
 
-Template.Export.helpers({
-  thisVenue(){
-    const venueId = FlowRouter.getParam('venueId');
-    return Venues.findOne({"_id": venueId});
-  },
-  thisReview(){
-    const venueId = FlowRouter.getParam('venueId');
-    return Reviews.find({"venueId": venueId});
-  },
-  thisPayload(){
-    if(Meteor.isClient)
-    {
-      const venueId = FlowRouter.getParam('venueId');
-      var venues = Venues.find({"venueId": venueId}).fetch();
-      console.log(venues);
-      var sensorId = venues[0].sensorId;
-      console.log(sensorId);
-      console.log(SensorData.find({"sensorId": sensorId}).fetch());
-      return SensorData.find({"venueId": venueId}).fetch();
-    }
-  },
-});
-
-Template.ReviewsD.helpers({
-  thisReview(){
-    const venueId = FlowRouter.getParam('venueId');
-    console.log("Day");
-    var today= new Date();
-    var todayStart=new Date(today.getFullYear(), today.getMonth(), today.getDate());
-    var reviewData = Reviews.find({"venueId" : venueId, "timestamp": { $gte: todayStart }}).fetch();
-    var theAnnoyingOne = Reviews.find({"_id" : "N4rfzLiozduHQBkuD"}).fetch();
-    var annoyingDate = theAnnoyingOne.timestamp;
-    console.log(annoyingDate);
-    console.log(todayStart + "<" + new Date());
-    return reviewData;
-  }
-});
-
-Template.ReviewsW.helpers({
-  thisReview(){
-    const venueId = FlowRouter.getParam('venueId');
-    console.log("Week");
-    var today= new Date();
-    console.log(today.getTime());
-    weeknum = today.getTime() - 604800000; //milliseconds in a week
-    console.log(weeknum);
-    weekAgo = new Date(weeknum);
-    console.log(weekAgo);
-    var reviewData = Reviews.find({"venueId" : venueId, "timestamp": {$gte: weekAgo }}).fetch();
-    console.log(reviewData);
-    return reviewData;
-  }
-});
-
-Template.ReviewsM.helpers({
-  thisReview(){
-    const venueId = FlowRouter.getParam('venueId');
-    console.log("Month");
-    var today= new Date();
-    console.log(today.getTime());
-    weeknum = today.getTime() - 2628000000 ; //milliseconds in a week
-    console.log(weeknum);
-    weekAgo = new Date(weeknum);
-    console.log(weekAgo);
-    var reviewData = Reviews.find({"venueId" : venueId, "timestamp": {$gte: weekAgo }}).fetch();
-    return reviewData;
-  }
-});
-
-Template.ReviewsX.helpers({
-  thisReview(){
-    const venueId = FlowRouter.getParam('venueId');
-    var today= new Date();
-    var todayStart=new Date(today.getFullYear(), today.getMonth(), today.getDate());
-    var reviewData = Reviews.find({"venueId" : venueId, "timestamp": {$gte: todayStart }}).fetch();
-    return reviewData;
-  }
-});
-
-Template.VenueEventsList.helpers({
-  events() {
-    const venueId=FlowRouter.getParam("venueId");
-    return Events.find({"venueId": venueId});
-  },
-  incompleteCount() {
-    const venueId=FlowRouter.getParam("venueId");
-    return Events.find({"venueId": venueId}).count();
-  },
-  thisVenue() {
-    const venueId=FlowRouter.getParam("venueId");
-    console.log("venueevents helper");
-    return Venues.findOne({"_id": venueId});
-  },
-  dateToStr() {
-    //var start = this.startDateTime;
-    //console.log(startDateTime);
-    //const eventStartDateTime = start.toString();
-    //return eventStartDateTime;
-    return;
-  }
-});
-
-Template.compareTemplate.helpers({
-  OwnerVenue(){
-    const venueId=FlowRouter.getParam("ownersVenueId");
-    //console.log(venueId);
-    //console.log(Venues.find(_id: venueId));
-    const venue = Venues.findOne({_id: venueId});
-    //console.log(Venues.findOne({_id: venueId}));
-    return venue;
-  },
-  CompareVenue(){
-  const venueId=FlowRouter.getParam("comparingVenueId");
-  //console.log(venueId);
-  //console.log(Venues.find(_id: venueId));
-  const venue = Venues.findOne({_id: venueId});
-  //console.log(Venues.findOne({_id: venueId}));
-  return venue;
-  }
-});
-
-Template.CompareVenueSelect.helpers({
-  thisReview(){
-    const venueId = this._id;
-    var reviewData = Reviews.find({"venueId" : venueId}).fetch();
-    console.log(reviewData);
-    var score = 0;
-    for(var i = 0; i < reviewData.length; i++){
-      score += reviewData[i].score;
-    }
-    score = score / reviewData.length;
-    console.log(score);
-    if(isNaN(score))
-    {
-      score = 0.1;
-    }
-    var obj = {avg : score};
-    return obj;
-  },
-  thisVenue(){
-    const venueId=FlowRouter.getParam("venueId");
-    return venueId;
-  },
-  venues() {
-    //console.log("body.js venuesssummary helper");
-    //console.log("venue");
-    return Venues.find({owner: {$ne : Meteor.userId()}});
-  },
-
-});
-
-/*Template.Event.helpers({
-  thisEvent(){
-    const eventId=FlowRouter.getParam("eventId");
-    return Events.findOne({"_id": eventId});
-  }
-});
-*/
 
 Template.EditVenue.helpers({
   thisVenue() {
@@ -218,13 +63,6 @@ Template.EditVenue.helpers({
   }
 });
 
-Template.EditEvent.helpers({
-  thisEvent() {
-    const eventId=FlowRouter.getParam("eventId");
-    console.log("Edit Event");
-    return Events.findOne({"_id": eventId});
-  }
-});
 
 Template.AddVenue.events({
   'submit .add-venue'(event) {
@@ -257,51 +95,7 @@ Template.AddVenue.events({
   },
 });
 
-Template.AddEvent.helpers({
-  thisVenue() {
-    const venueId=FlowRouter.getParam("venueId");
-    console.log("Adding Event: ", venueId);
-    return Venues.findOne({"_id": venueId});
-  },
-});
 
-Template.VenueEventsList.events({
-  'click .delete' : function() {
-    var confirmed = true;
-    if(Meteor.isClient){
-      console.log("deleting ", this._id);
-      confirmed = confirm("Are you sure you want to delete " + this.name)
-    }
-    if(confirmed === true)
-    {
-      console.log("Inside if");
-      Meteor.call('events.remove', this._id);
-    }
-  },
-
-});
-
-Template.AddEvent.events({
-  'submit .add-event'(event) {
-    console.log("Before default");
-    //prevent default browser input
-    event.preventDefault();
-
-    //Get the values from the element
-    const target = event.target;
-    const eventName = target.eventName.value;
-    const eventDescription = target.eventDescription.value;
-    const eventStartDateTime = new Date(target.eventStartDate.value);
-    const eventEndDateTime = new Date(target.eventEndDate.value);
-
-    console.log("Adding events");
-    
-    //insert above data into db
-    Meteor.call('events.insert', eventName, eventDescription,
-      eventStartDateTime, eventEndDateTime, this._id);
-    window.location.assign("/venueevents/" + this._id);
-  },
-});
 
 Template.EditVenue.events({
   'submit .edit-venue'(event) {
@@ -333,49 +127,3 @@ Template.EditVenue.events({
     window.location.assign("/venue/" + this._id);
   },
 });
-
-Template.EditEvent.events({
-  'submit .edit-event'(event) {
-    console.log("form submitted");
-    
-    //prevent the browser from submitting
-    event.preventDefault();
-
-    //get values from form
-    const target = event.target;
-    const eventId=this._id;
-    const venueId = target.venueId.value;
-    const eventName = target.eventName.value;
-    const eventDescription = target.eventDescription.value;
-    var startDateTimeSTR = target.eventStartDateTime.value;
-    const eventStartDateTime = new Date(startDateTimeSTR);
-    var eventEndDateTimeSTR = target.eventEndDateTime.value; 
-    const eventEndDateTime = new Date(eventEndDateTimeSTR);
-
-    Meteor.call('events.update', eventName, eventDescription,
-      eventStartDateTime, eventEndDateTime, eventId);
-
-    window.location.assign("/venueevents/" + venueId);
-  },
-});
-
-Template.CompareNavBar.helpers({
-  OwnerVenue(){
-    const venueId=FlowRouter.getParam("ownersVenueId");
-    //console.log(venueId);
-    //console.log(Venues.find(_id: venueId));
-    const venue = Venues.findOne({_id: venueId});
-    //console.log(Venues.findOne({_id: venueId}));
-    return venue;
-  },
-  CompareVenue(){
-  const venueId=FlowRouter.getParam("comparingVenueId");
-  //console.log(venueId);
-  //console.log(Venues.find(_id: venueId));
-  const venue = Venues.findOne({_id: venueId});
-  //console.log(Venues.findOne({_id: venueId}));
-  return venue;
-  },
-});
-
-

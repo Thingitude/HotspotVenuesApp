@@ -37,7 +37,7 @@ Meteor.methods({
   },
   'events.update'(name, description, 
       startDateTime, endDateTime, eventId) {
-    console.log("run events.update");
+    console.log("Update event " + eventId + " with name " +name + "description " + description + "from " + startDateTime + " until " +endDateTime);
     check(name, String);
 
     //checking privelleges

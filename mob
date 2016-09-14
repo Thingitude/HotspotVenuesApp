@@ -1,7 +1,7 @@
 // This section sets up some basic app metadata,
 // the entire section is optional.
 App.info({
-  id: 'com.thingitude.hotspot.venues',
+  id: 'com.thingitude.hotspot.audience',
   version: '0.0.2',
   name: 'Hotspot Venues',
   description: 'How hot is your venue?',
@@ -11,6 +11,11 @@ App.info({
 });
 // Set up resources such as icons and launch screens.
 App.icons({
+'android_mdpi':'public/android_mdpi.png',
+'android_hdpi':'public/android_hdpi.png',
+'android_xhdpi':'public/android_xhdpi.png',
+'android_xxhdpi':'public/android_xxhdpi.png',
+'android_xxxhdpi':'public/android_xxxhdpi.png'
 });
 App.launchScreens({
 });
@@ -19,6 +24,9 @@ App.setPreference('BackgroundColor', '0xff0000ff');
 App.setPreference('HideKeyboardFormAccessoryBar', true);
 App.setPreference('Orientation', 'default');
 App.setPreference('Orientation', 'all', 'ios');
+App.accessRule('*.google.com/*');
+App.accessRule('*.googleapis.com/*');
+App.accessRule('*.gstatic.com/*');
 // Pass preferences for a particular PhoneGap/Cordova plugin
 App.configurePlugin('com.phonegap.plugins.facebookconnect', {
   APP_ID: '933308433481548',

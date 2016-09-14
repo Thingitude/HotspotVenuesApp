@@ -29,17 +29,16 @@
   <div class="table">
     <table class="table">
       <thead>
-        <tr><th>Venue</th><th>Description</th><th>Stats / Edit</th><th>Rating</th></tr>
+        <tr><th>Venue</th><th>Description</th><th>Rating</th><th>Stats / Edit</th></tr>
       </thead>
       <tbody>
         {{#each venues}}
-          <tr><td>{{name}}</td><td>{{description}}</td><td>
-          <a type="button" class="btn btn-default" href="venue/{{this._id}}">
+          <tr><td class="col-sm-3">{{name}}</td><td class="col-sm-6">{{description}}</td>
+          {{#with thisReview}}<td class="col-sm-1">{{> starsRating id='rating2' rating=avg size=10}}</td>{{/with}}<td class="col-sm-2"><a type="button" class="btn btn-default" href="venue/{{this._id}}">
           <span class="glyphicon glyphicon-stats" aria-hidden="true"></span></a>
           <a type="button" class="btn btn-default" href="/editvenue/{{this._id}}">
           <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a></td>
-          {{#with thisReview}}<td>{{> starsRating id='rating2' rating=avg size=10}}</td>{{/with}}
-        </tr>
+          </tr>
         {{/each}}
       </tbody>
     </table>
@@ -213,11 +212,31 @@
 
 <template name="Export">
   {{#with thisVenue}}
-    <h2>Export {{this.name}}</h2>
+    <h2>{{name}} </h2>
+    <h3>"{{description}}"</h3>
+    {{>VenueNavBar}}
+    <form id="submitDates" class="set-date-range form-horizontal">
+      <input class="hidden" type="hidden" name="venueId" value={{venueId}} />
+      <input class="hidden" type="hidden" name="sensorId" value={{sensorId}} />
+      <div class="form-group">
+        <label for="startDate" class="col-sm-2 control-label">Start date</label>
+        <div class="col-sm-2">
+          {{#datetimepicker format='YYYY-MM-DD' keepOpen=false viewMode='days'}}
+            <input class="form-control" type="text" name="startDate" value={{thisStartDate}} />
+          {{/datetimepicker}}
+        </div>
+        <label for="endDate" class="col-sm-1 control-label">End date</label>
+        <div class="col-sm-2">
+          {{#datetimepicker format='YYYY-MM-DD' keepOpen=false viewMode='days'}}
+            <input class="form-control" type="text" name="endDate" value={{thisEndDate}} />
+          {{/datetimepicker}}
+        </div>
+        <div class="col-sm-2 ">
+          <input class="btn btn-primary" type="submit" name="exportButton" value="Export to CSV"> 
+        </div>
+      </div>
+    </form>  
   {{/with}}
-  {{#each thisPayload}}
-    Test<hr>
-  {{/each}}
 </template>
 
 <template name="VenueNavBar">
@@ -246,8 +265,8 @@
           <ul class="nav navbar-nav">
             <li><a role="button"  href="/editvenue/{{_id}}">Edit venue</a></li>
             <li><a href="/venueevents/{{_id}}">List events</a></li>
-            <li><a href="/export/{{_id}}">Export</a></li>
             <li><a href="/compare/{{_id}}">Compare venues</a></li>
+            <li><a href="/export/{{_id}}">Export</a></li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
             <li><a href="/">Return to venue list</a></li>
@@ -257,44 +276,76 @@
     </nav>
 </template>
 
-<template name="ReviewsD">
-  Reviews for today<br><hr>
+<template name="Reviews5">
+  <h4>Last 5 reviews</h4>
   {{#each thisReview}}
-    {{> starsRating id='rating2' rating=this.score size=20}}<br>
-    <h4>Details: </h4><br>
-    <h5>"{{this.details}}"</h5>
-    <hr>
+    <div class="col-sm-3">
+    {{> starsRating id='rating2' rating=this.score size=20}} 
+    </div>
+    <div class="col-sm-9">
+    <h5>"{{this.details}}" <small>{{timestamp}}</small></h5>
+    </div>
   {{/each}}
 </template>
 
 <template name="ReviewsW">
-  Reviews for this week
-    {{#each thisReview}}
-    {{> starsRating id='rating2' rating=this.score size=20}}<br>
-    <h4>Details: </h4><br>
-    <h5>"{{this.details}}"</h5>
-    <hr>
+  <h4>This week's reviews</h4>
+  {{#each thisReview}}
+    <div class="col-sm-3">
+    {{> starsRating id='rating2' rating=this.score size=20}} 
+    </div>
+    <div class="col-sm-9">
+    <h5>"{{this.details}}" <small>{{timestamp}}</small></h5>
+    </div>
   {{/each}}
 </template>
 
 <template name="ReviewsM">
-  Reviews for this month
-    {{#each thisReview}}
-    {{> starsRating id='rating2' rating=this.score size=20}}<br>
-    <h4>Details: </h4><br>
-    <h5>"{{this.details}}"</h5>
-    <hr>
+  <h4>This month's reviews</h4>
+  {{#each thisReview}}
+    <div class="col-sm-3">
+    {{> starsRating id='rating2' rating=this.score size=20}} 
+    </div>
+    <div class="col-sm-9">
+    <h5>"{{this.details}}" <small>{{timestamp}}</small></h5>
+    </div>
   {{/each}}
 </template>
 
 <template name="ReviewsX">
-  Custom review time
-    {{#each thisReview}}
-    {{> starsRating id='rating2' rating=this.score size=20}}<br>
-    <h4>Details: </h4><br>
-    <h5>"{{this.details}}"</h5>
-    <hr>
+  <h4>Reviews this period</h4>
+  {{#each thisReview}}
+    <div class="col-sm-3">
+    {{> starsRating id='rating2' rating=this.score size=20}} 
+    </div>
+    <div class="col-sm-9">
+    <h5>"{{this.details}}" <small>{{timestamp}}</small></h5>
+    </div>
   {{/each}}
+</template>
+
+<template name="CurrentInfo">
+  <div id="otherData" class="col-sm-6">
+      <h4> Current information</h4>
+      {{#with thisLatestData}}
+      <table class="table table-condensed">
+        <tbody>
+            <tr>
+              <td class="col-sm-2">People</td><td class="col-sm-1"><strong>{{people}}</strong></td>
+              <td class="col-sm-2">Average length of stay</td><td class="col-sm-1"><strong>{{dur}} mins</strong></td>
+            </tr>
+            <tr>
+              <td class="col-sm-2">Temperature</td><td class="col-sm-1"><strong>{{temp}} &deg;C</strong></td>
+              <td class="col-sm-2">Humidity</td><td class="col-sm-1"><strong>{{hum}} %</strong></td>
+            </tr>
+            <tr>
+              <td class="col-sm-2">Average noise level</td><td class="col-sm-1"><strong>{{meanSnd}}</strong></td>
+              <td class="col-sm-2">Peak noise level</td><td class="col-sm-1"><strong>{{peakSnd}}</strong></td>
+            </tr>
+        </tbody>
+      </table>
+      {{/with}}  
+    </div>
 </template>
 
 <template name="VenueD">
@@ -305,7 +356,10 @@
     <div id="chart">
       {{barChartDaily}}
     </div>
-    {{>ReviewsD}}
+    {{>CurrentInfo}}
+    <div id="reviews" class="col-sm-6">
+      {{>Reviews5}}
+    </div>
   {{/with}}
 </template>
 
@@ -318,7 +372,10 @@
     <div id="chart">
       {{barChartWeek}}
     </div>
+    {{>CurrentInfo}}
+    <div id="reviews" class="col-sm-6">
     {{>ReviewsW}}
+    </div>
   {{/with}}
 </template>
 
@@ -330,7 +387,10 @@
     <div id="chart">
       {{barChartMonth}}
     </div>
-    {{>ReviewsM}}
+    {{>CurrentInfo}}
+    <div id="reviews" class="col-sm-6">
+      {{>ReviewsM}}
+    </div>
   {{/with}}
 </template>
 
@@ -364,97 +424,13 @@
     <div id="chart">
       {{barChartCustom}}
     </div>
+    {{>CurrentInfo}}
+    <div id="reviews" class="col-sm-6">
     {{>ReviewsX}}
+    </div>
   {{/with}}
 </template>
 
-
-<template name="EditEvent">
-{{#with thisEvent}}
-  <h2>Edit Event</h2>
-  <form class="edit-event form-horizontal">
-  <input class="hidden" type="hidden" name="venueId" value={{venueId}} />
-    <div class="form-group">
-      <label for="eventName" class="col-sm-2 control-label">Event name</label>
-      <div class="col-sm-10">
-        <input class="form-control" type="text" name="eventName" value={{name}} />
-      </div>
-    </div>
-    <div class="form-group">
-      <label for="eventDescription" class="col-sm-2 control-label">Description</label>
-      <div class="col-sm-10">
-        <input class="form-control" type="text" name="eventDescription" value={{description}} />
-      </div>
-    </div>
-    <div class="form-group">
-      <label for="eventStartDateTime" class="col-sm-2 control-label">Start date/time</label>
-      <div class="col-sm-5">
-        {{#datetimepicker format='DD/MM/YYYY hh:mm A' keepOpen=false viewMode='days'}}
-          <input type="text" id="startDate" name="eventStartDateTime" class="form-control" value="{{startDateTime}}"/>
-        {{/datetimepicker}}
-      </div>
-    </div>
-    <div class="form-group">
-      <label for="eventEndDateTime" class="col-sm-2 control-label">End date/time</label>
-      <div class="col-sm-5">
-        {{#datetimepicker format='DD/MM/YYYY hh:mm A' keepOpen=false viewMode='days'}}
-          <input type="text" id="startDate" name="eventEndDateTime" class="form-control" value="{{startDateTime}}"/>
-        {{/datetimepicker}}
-      </div>
-    </div>
-    <div class="form-group">
-      <div class="col-sm-offset-2 col-sm-10">
-        <input class="btn btn-primary" type="submit" value="Update">  <a href="/venueevents/{{venueId}}" class="btn btn-default">Cancel</a>
-      </div>
-    </div>
-  </form>  
-{{/with}}
-</template>
-
-
-
-<template name="VenueEventsList">
-  {{#with thisVenue}}
-  <h2>Events at {{name}}</h2>
-    <nav class="navbar navbar-default">
-      <div class="container-fluid">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-        </div>
-        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-          <ul class="nav navbar-nav">
-            <li><a role="button" name="addEventBtn" href="/addevent/{{this._id}}">
-              <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add event</a></li>
-          </ul>
-          <ul class="nav navbar-nav navbar-right">
-            <li><a href="/venue/{{this._id}}">Return to venue</a></li>
-          </ul>
-        </div>
-      </div><!-- /.container-fluid -->
-    </nav>
-  <div class="table-responsive">
-    <table class="table">
-      <thead>
-        <tr><th>Event</th><th>Description</th><th>Start date/time</th><th>End date/time</th><th>Edit / delete</th></tr>
-      </thead>
-      <tbody>
-        {{#each events}}
-          <tr><td>{{name}}</td><td>{{description}}</td><td>{{startDateTime.toDateString}}</td><td>{{endDateTime.toDateString}}</td><td>
-            <a type="button" class="btn btn-default" href="/editevent/{{this._id}}">
-            <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a>
-            <button class="btn btn-default delete" ><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
-          </td></tr>
-          {{/each}}
-      </tbody>
-    </table>
-  </div>
-  {{/with}}
-</template>
 
 <template name="CompareVenueSelect">
   {{#with thisVenue}}
@@ -645,7 +621,48 @@
 </template>
 
 
-
+<template name="VenueEventsList">
+  {{#with thisVenue}}
+  <h2>Events at {{name}}</h2>
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+        </div>
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <ul class="nav navbar-nav">
+            <li><a role="button" name="addEventBtn" href="/addevent/{{this._id}}">
+              <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add event</a></li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="/venue/{{this._id}}">Return to venue</a></li>
+          </ul>
+        </div>
+      </div><!-- /.container-fluid -->
+    </nav>
+  <div class="table-responsive">
+    <table class="table">
+      <thead>
+        <tr><th>Event</th><th>Description</th><th>Start date/time</th><th>End date/time</th><th>Edit / delete</th></tr>
+      </thead>
+      <tbody>
+        {{#each events}}
+          <tr><td>{{name}}</td><td>{{description}}</td><td>{{thisStartDateTime}}</td><td>{{thisEndDateTime}}</td><td>
+            <a type="button" class="btn btn-default" href="/editevent/{{this._id}}">
+            <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a>
+            <button class="btn btn-default delete" ><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+          </td></tr>
+          {{/each}}
+      </tbody>
+    </table>
+  </div>
+  {{/with}}
+</template>
 
 
 <template name="AddEvent">
@@ -666,18 +683,18 @@
       </div>
     </div>
     <div class="form-group">
-      <label for="eventStartDate" class="col-sm-2 control-label">Start date/time</label>
+      <label for="eventStartDateTime" class="col-sm-2 control-label">Start date/time</label>
       <div class="col-sm-10" style="position:relative">  
-        {{#datetimepicker format='DD/MM/YYYY hh:mm A' keepOpen=false viewMode='days'}}
-          <input type="text" id="startDate" name="eventStartDate" class="form-control"/>
+        {{#datetimepicker format='YYYY-MM-DD HH:mm' keepOpen=false sideBySide=true}}
+          <input type="text" name="eventStartDateTime" class="form-control"/>
         {{/datetimepicker}}
       </div>
     </div>
     <div class="form-group">
-      <label for="eventEndDate" class="col-sm-2 control-label">End date/time</label>
+      <label for="eventEndDateTime" class="col-sm-2 control-label">End date/time</label>
       <div class="col-sm-10" style="positon:relative">
-        {{#datetimepicker format='DD/MM/YYYY hh:mm A' keepOpen=false viewMode='days'}}
-          <input type="text" id="endDate" name="eventEndDate" class="form-control"/>
+        {{#datetimepicker format='YYYY-MM-DD HH:mm' keepOpen=false sideBySide=true}}
+          <input type="text" name="eventEndDateTime" class="form-control"/>
         {{/datetimepicker}}
       </div>
     </div>
@@ -688,6 +705,49 @@
     </div>
   </form>  
    {{/with}}
+</template>
+
+
+<template name="EditEvent">
+{{#with thisEvent}}
+  <h2>Edit Event</h2>
+  <form class="edit-event form-horizontal">
+  <input class="hidden" type="hidden" name="venueId" value={{venueId}} />
+    <div class="form-group">
+      <label for="eventName" class="col-sm-2 control-label">Event name</label>
+      <div class="col-sm-10">
+        <input class="form-control" type="text" name="eventName" value={{name}} />
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="eventDescription" class="col-sm-2 control-label">Description</label>
+      <div class="col-sm-10">
+        <input class="form-control" type="text" name="eventDescription" value={{description}} />
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="eventStartDateTime" class="col-sm-2 control-label">Start date/time</label>
+      <div class="col-sm-5">
+        {{#datetimepicker format='YYYY-MM-DD HH:mm' keepOpen=false viewMode='days' }}
+          <input type="text" id="eventStartDateTime" name="eventStartDateTime" class="form-control" value={{thisStartDateTime}}/>
+        {{/datetimepicker}}
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="eventEndDateTime" class="col-sm-2 control-label">End date/time</label>
+      <div class="col-sm-5">
+        {{#datetimepicker format='YYYY-MM-DD HH:mm' keepOpen=false viewMode='days' }}
+          <input type="text" id="eventEndDateTime" name="eventEndDateTime" class="form-control" value={{thisEndDateTime}}/>
+        {{/datetimepicker}}
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="col-sm-offset-2 col-sm-10">
+        <input class="btn btn-primary" type="submit" value="Update">  <a href="/venueevents/{{venueId}}" class="btn btn-default">Cancel</a>
+      </div>
+    </div>
+  </form>  
+{{/with}}
 </template>
 
 
