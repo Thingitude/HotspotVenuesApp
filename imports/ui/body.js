@@ -12,7 +12,7 @@ import './barchart.js';
 import './compare.js';
 import './reviews.js';
 import './export.js';
-import './event.js';
+import './events.js';
 import './body.html';
 
 Debug = Venues;
